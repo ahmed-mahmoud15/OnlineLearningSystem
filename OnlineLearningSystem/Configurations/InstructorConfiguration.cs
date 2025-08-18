@@ -8,7 +8,7 @@ namespace OnlineLearningSystem.Configurations
     {
         public void Configure(EntityTypeBuilder<Instructor> builder)
         {
-            builder.ToTable("Instructores");
+            builder.ToTable("Instructors");
 
             builder.Property(e => e.LinkedInProfile).IsRequired(false);
             builder.Property(e => e.Experience).IsRequired();

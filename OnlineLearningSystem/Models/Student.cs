@@ -1,6 +1,6 @@
 ﻿namespace OnlineLearningSystem.Models
 {
-    public class Student
+    public class Student : User
     {
         public string GitHubAccount { get; set; }
 

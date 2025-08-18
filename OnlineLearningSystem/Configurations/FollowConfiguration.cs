@@ -11,8 +11,8 @@ namespace OnlineLearningSystem.Configurations
             builder.HasKey(e => new { e.StudentId, e.InstructorId });
             builder.Property(e => e.FollowDate).IsRequired().HasDefaultValueSql("GETUTCDATE()");
 
-            builder.HasOne(e => e.Student).WithMany(e => e.Follows).HasForeignKey(e => e.StudentId);
-            builder.HasOne(e => e.Instructor).WithMany(e => e.FollowedBy).HasForeignKey(e => e.InstructorId);
+            builder.HasOne(e => e.Student).WithMany(e => e.Follows).HasForeignKey(e => e.StudentId).OnDelete(DeleteBehavior.ClientCascade);
+            builder.HasOne(e => e.Instructor).WithMany(e => e.FollowedBy).HasForeignKey(e => e.InstructorId).OnDelete(DeleteBehavior.ClientCascade);
         }
     }
 }

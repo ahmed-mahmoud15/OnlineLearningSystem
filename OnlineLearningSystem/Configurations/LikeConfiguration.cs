@@ -12,9 +12,9 @@ namespace OnlineLearningSystem.Configurations
 
             builder.Property(e => e.LikedDate).IsRequired().HasDefaultValueSql("GETUTCDATE()");
 
-            builder.HasOne(e => e.Student).WithMany(e => e.Likes).HasForeignKey(e => e.StudentId);
+            builder.HasOne(e => e.Student).WithMany(e => e.Likes).HasForeignKey(e => e.StudentId).OnDelete(DeleteBehavior.ClientCascade);
 
-            builder.HasOne(e => e.Course).WithMany(e => e.LikedBy).HasForeignKey(e => e.CourseId);
+            builder.HasOne(e => e.Course).WithMany(e => e.LikedBy).HasForeignKey(e => e.CourseId).OnDelete(DeleteBehavior.ClientCascade);
         }
     }
 }
