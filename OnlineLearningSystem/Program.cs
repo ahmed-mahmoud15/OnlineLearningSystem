@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OnlineLearningSystem.Data;
+using OnlineLearningSystem.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,8 +11,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+// my middlewares
+
+builder.Services.AddCustomIdentity();
+builder.Services.AddRepositories();
+builder.Services.AddServices();
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
