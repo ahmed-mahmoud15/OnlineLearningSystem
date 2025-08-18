@@ -16,11 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Configurations\" />
     <Folder Include="Middlewares\" />
     <Folder Include="DTOs\" />
     <Folder Include="Services\" />
-    <Folder Include="Repositories\" />
     <Folder Include="ViewModels\" />
   </ItemGroup>
 
