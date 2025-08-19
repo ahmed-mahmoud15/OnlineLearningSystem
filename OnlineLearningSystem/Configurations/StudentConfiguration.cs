@@ -11,6 +11,8 @@ namespace OnlineLearningSystem.Configurations
             builder.ToTable("Students");
 
             builder.Property(e => e.GitHubAccount).IsRequired(false);
+
+            builder.Property(e => e.Coins).IsRequired().HasDefaultValue(100);
         }
     }
 }

@@ -14,6 +14,7 @@ namespace OnlineLearningSystem.Configurations
             builder.Property(e => e.Date).IsRequired().HasDefaultValueSql("GETUTCDATE()");
 
             builder.Property(e => e.Progress).IsRequired().HasDefaultValue(0);
+            builder.Property(e => e.LastViewedLesson).IsRequired().HasDefaultValue(0);
 
             builder.HasIndex(e => new {e.StudentId, e.CourseId}).IsUnique();
 
@@ -21,7 +22,6 @@ namespace OnlineLearningSystem.Configurations
 
             builder.HasOne(e => e.Course).WithMany(e => e.Enrollments).HasForeignKey(e => e.CourseId).OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasOne(e => e.Payment).WithOne().HasForeignKey<Enrollment>(e => e.PaymentId).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

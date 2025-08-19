@@ -13,6 +13,8 @@ namespace OnlineLearningSystem.Configurations
             builder.Property(x => x.Amount).IsRequired();
 
             builder.ToTable(tb => tb.HasCheckConstraint("CK_Payment_Amount", "[Amount] > 0"));
+
+            builder.HasOne(e => e.Student).WithMany(e => e.Payments).HasForeignKey(e => e.StudentId).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

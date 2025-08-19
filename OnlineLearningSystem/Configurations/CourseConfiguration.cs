@@ -14,7 +14,7 @@ namespace OnlineLearningSystem.Configurations
 
             builder.Property(e => e.Description).IsRequired(false);
 
-            builder.Property(e => e.Price).HasColumnType("decimal(10,2)").IsRequired();
+            builder.Property(e => e.Price).IsRequired();
 
             builder.ToTable(tb => tb.HasCheckConstraint("CK_Course_Price", "[Price] >= 0"));
 
