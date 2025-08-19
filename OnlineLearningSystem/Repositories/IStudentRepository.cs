@@ -1,12 +1,9 @@
-﻿using Microsoft.Identity.Client;
-using OnlineLearningSystem.Models;
+﻿using OnlineLearningSystem.Models;
 
 namespace OnlineLearningSystem.Repositories
 {
     public interface IStudentRepository : IRepository<Student>
     {
-        public Task<Student> GetWithUserDataAsync(int studentId);
-
         public Task<Student> GetWithEnrollmentsAsync(int studentId);
 
         public Task<Student> GetWithPaymentsAsync(int studentId);
