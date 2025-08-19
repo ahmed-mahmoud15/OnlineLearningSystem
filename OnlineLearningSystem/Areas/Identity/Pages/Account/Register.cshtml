@@ -46,6 +46,12 @@
                             <span asp-validation-for="Input.Bio" class="text-danger small"></span>
                         </div>
 
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.GithubAccount" class="form-control" aria-required="true" placeholder="www.github.com" />
+                            <label asp-for="Input.GithubAccount"></label>
+                            <span asp-validation-for="Input.GithubAccount" class="text-danger small"></span>
+                        </div>
+
                         <div class="mb-3">
                             <label asp-for="Input.ProfilePhotoPath" class="form-label"></label>
                             <input asp-for="Input.ProfilePhotoPath" type="file" class="form-control" />

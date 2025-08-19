@@ -5,8 +5,7 @@ namespace OnlineLearningSystem.Services
 {
     public interface IStudentService
     {
-        public Task AddStudentAsync(Student student, IFormFile file);
-
+        public Task EditStudentAsync(EditStudentViewModel model);
         public Task LikeCourse(int studentId, int courseId);
         public Task DislikeCourse(int studentId, int courseId);
 

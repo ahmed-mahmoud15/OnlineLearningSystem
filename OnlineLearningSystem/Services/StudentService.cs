@@ -13,16 +13,6 @@ namespace OnlineLearningSystem.Services
             this.unitOfWork = unit;
         }
 
-        public async Task AddStudentAsync(Student student, IFormFile file)
-        {
-            if (student == null) throw new ArgumentNullException($"Student Is Null");
-            if (file == null) throw new ArgumentNullException($"File Is Null");
-
-            HandleProfileImageUpload(student, file);
-            await unitOfWork.Students.AddAsync(student);
-            await unitOfWork.CompleteAsync();
-        }
-
         public async Task DislikeCourse(int studentId, int courseId)
         {
             Student student = await unitOfWork.Students.GetByIdAsync(studentId);
@@ -41,6 +31,26 @@ namespace OnlineLearningSystem.Services
             }
 
             await unitOfWork.Likes.DeleteAsync(oldLike);
+            await unitOfWork.CompleteAsync();
+        }
+
+        public async Task EditStudentAsync(EditStudentViewModel model)
+        {
+            if(model == null) throw new ArgumentNullException("model is Null" );
+
+            Student student = await unitOfWork.Students.GetByIdAsync(model.Id);
+
+            if (student == null) { throw new ArgumentNullException($"There is no Student with Id = {model.Id}"); }
+            if(model.ProfilePhoto == null) { throw new ArgumentNullException("Image file is null"); }
+            HandleProfileImageUpload(student, model.ProfilePhoto);
+
+            student.BirthDate = model.BirthDate;
+            student.FirstName = model.FirstName;
+            student.LastName = model.LastName;
+            student.GitHubAccount = model.GithubAccount;
+            student.Bio = model.Bio;
+
+            unitOfWork.Students.Update(student);
             await unitOfWork.CompleteAsync();
         }
 

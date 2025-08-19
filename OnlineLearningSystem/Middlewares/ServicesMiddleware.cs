@@ -8,7 +8,7 @@ namespace OnlineLearningSystem.Middlewares
 
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IStudentService, StudentService>();
-            services.AddScoped<IInstructorService, InstructorServic>();
+            services.AddScoped<IInstructorService, InstructorService>();
             services.AddScoped<ICourseService, CourseService>();
             services.AddScoped<IEnrollmentService, EnrollmentService>();
             services.AddScoped<ILessonService, LessonService>();

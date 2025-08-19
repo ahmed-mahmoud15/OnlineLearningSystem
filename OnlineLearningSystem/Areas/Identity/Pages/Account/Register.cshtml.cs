@@ -121,6 +121,9 @@ namespace OnlineLearningSystem.Areas.Identity.Pages.Account
             [Display(Name = "Bio")]
             public string? Bio { get; set; }
 
+            [Display(Name = "GitHub")]
+            public string? GithubAccount { get; set; }
+
             [Display(Name = "Profile Photo Path")]
             public IFormFile ProfilePhotoPath { get; set; }
         }
@@ -158,6 +161,7 @@ namespace OnlineLearningSystem.Areas.Identity.Pages.Account
                         Bio = Input.Bio,
                         BirthDate = Input.BirthDate,
                         ProfilePhotoPath = null,
+                        GitHubAccount = Input.GithubAccount,
                         IdentityId = userId
                     };
 
