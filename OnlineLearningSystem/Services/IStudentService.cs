@@ -1,4 +1,5 @@
 ﻿using OnlineLearningSystem.Models;
+using OnlineLearningSystem.ViewModels;
 
 namespace OnlineLearningSystem.Services
 {
@@ -7,11 +8,13 @@ namespace OnlineLearningSystem.Services
         public Task AddStudentAsync(Student student, IFormFile file);
 
         public Task LikeCourse(int studentId, int courseId);
+        public Task DislikeCourse(int studentId, int courseId);
 
         public Task FollowInstructor(int studentId, int instructorId);
+        public Task UnfollowInstructor(int studentId, int instructorId);
 
         public Task EnrollInCourse(int studentId, int courseId);
 
-        public Task MakePayment(int studentId);
+        public Task MakePayment(MakePaymentViewModel model);
     }
 }

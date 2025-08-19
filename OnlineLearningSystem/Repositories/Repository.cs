@@ -24,13 +24,14 @@ namespace OnlineLearningSystem.Repositories
         public async Task DeleteAsync(object id)
         {
             T record = await GetByIdAsync(id);
-            table.Remove(record);
+            if (record != null) {
+                table.Remove(record);
+            }
         }
 
         public async Task<T> GetWithConditionAsync(Expression<Func<T, bool>> predicate)
         {
-            var result =  await table.FirstOrDefaultAsync(predicate);
-            return result ?? throw new InvalidOperationException($"error while processing \n{predicate.ToString()}");
+            return await table.FirstOrDefaultAsync(predicate);
         }
 
         public async Task<IEnumerable<T>> GetAllAsync()
@@ -40,12 +41,7 @@ namespace OnlineLearningSystem.Repositories
 
         public async Task<T> GetByIdAsync(object id)
         {
-            var result =  await table.FindAsync(id);
-            if (result == null)
-            {
-                throw new Exception($"There is no record of {typeof(T)} with id = {id}");
-            }
-            return result;
+            return await table.FindAsync(id);
         }
 
         public async Task SaveAsync()
