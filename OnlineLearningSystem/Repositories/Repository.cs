@@ -1,4 +1,5 @@
 ﻿
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using OnlineLearningSystem.Data;
 
@@ -26,6 +27,12 @@ namespace OnlineLearningSystem.Repositories
             table.Remove(record);
         }
 
+        public async Task<T> GetWithConditionAsync(Expression<Func<T, bool>> predicate)
+        {
+            var result =  await table.FirstOrDefaultAsync(predicate);
+            return result ?? throw new InvalidOperationException($"error while processing \n{predicate.ToString()}");
+        }
+
         public async Task<IEnumerable<T>> GetAllAsync()
         {
             return await table.ToListAsync();
@@ -48,7 +55,12 @@ namespace OnlineLearningSystem.Repositories
 
         public void Update(T entity)
         {
-            table.Update(entity);
+            context.Entry(entity).State = EntityState.Modified;
+        }
+
+        public async Task<IEnumerable<T>> GetAllWithConditionAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await table.Where(predicate).ToListAsync();
         }
     }
 }

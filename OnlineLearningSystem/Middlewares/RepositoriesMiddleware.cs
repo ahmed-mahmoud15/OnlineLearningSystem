@@ -7,6 +7,8 @@ namespace OnlineLearningSystem.Middlewares
         public static IServiceCollection AddRepositories(this IServiceCollection services) {
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped<IStudentRepository, StudentRepository>();
+            services.AddScoped<IInstructorRepository, InstructorRepository>();
 
             return services;
         }
