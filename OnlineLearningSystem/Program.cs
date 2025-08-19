@@ -20,6 +20,10 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
+
+// custom middleware
+await app.Services.AddCustomRolesAsync();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

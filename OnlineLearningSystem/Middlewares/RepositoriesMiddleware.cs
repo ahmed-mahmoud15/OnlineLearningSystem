@@ -9,6 +9,7 @@ namespace OnlineLearningSystem.Middlewares
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<IInstructorRepository, InstructorRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             return services;
         }
