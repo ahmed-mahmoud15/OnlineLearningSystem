@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using OnlineLearningSystem.Common_Functionalities;
 using OnlineLearningSystem.Models;
 using OnlineLearningSystem.Repositories;
 using OnlineLearningSystem.ViewModels;
@@ -19,11 +20,16 @@ namespace OnlineLearningSystem.Services
         {
             if (model == null) throw new ArgumentNullException("model is Null");
 
-            Instructor instructor = await unitOfWork.Instructors.GetByIdAsync(model.Id);
+            Instructor instructor = await CheckAndGetInstructorAsync(model.Id);
 
-            if (instructor == null) { throw new ArgumentNullException($"There is no Instructor with Id = {model.Id}"); }
-            if (model.ProfilePhoto == null) { throw new ArgumentNullException("Image file is null"); }
-            HandleProfileImageUpload(instructor, model.ProfilePhoto);
+            if (model.NewProfilePhoto != null)
+            {
+                FileHandler.HandleProfileImageUpload(instructor, model.NewProfilePhoto);
+            }
+            else
+            {
+                instructor.ProfilePhotoPath = model.OldProfilePhotoPath;
+            }
 
             instructor.BirthDate = model.BirthDate;
             instructor.FirstName = model.FirstName;
@@ -36,24 +42,31 @@ namespace OnlineLearningSystem.Services
             await unitOfWork.CompleteAsync();
         }
 
-        private void HandleProfileImageUpload(User user, IFormFile profileImageFile)
+        private async Task<Student> CheckAndGetStudentAsync(int studentId)
         {
-            if (profileImageFile != null && profileImageFile.Length > 0)
-            {
-                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
-                Directory.CreateDirectory(uploadsFolder);
+            Student student = await unitOfWork.Students.GetByIdAsync(studentId);
 
-                var fileName = $"{user.Id}_{Path.GetFileName(profileImageFile.FileName)}";
-                var filePath = Path.Combine(uploadsFolder, fileName);
+            if (student == null) { throw new ArgumentNullException($"There is no Student with Id = {studentId}"); }
 
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    profileImageFile.CopyTo(fileStream);
-                }
-
-                user.ProfilePhotoPath = "/images/" + fileName;
-            }
+            return student;
         }
 
+        private async Task<Course> CheckAndGetCourseAsync(int courseId)
+        {
+            Course course = await unitOfWork.Courses.GetByIdAsync(courseId);
+
+            if (course == null) { throw new ArgumentNullException($"There is no Course with Id = {courseId}"); }
+
+            return course;
+        }
+
+        private async Task<Instructor> CheckAndGetInstructorAsync(int instructorId)
+        {
+            Instructor instructor = await unitOfWork.Instructors.GetByIdAsync(instructorId);
+
+            if (instructor == null) { throw new ArgumentNullException($"There is no Instructor with Id = {instructorId}"); }
+
+            return instructor;
+        }
     }
 }

@@ -170,7 +170,8 @@ namespace OnlineLearningSystem.Areas.Identity.Pages.Account
 
                     await _userManager.AddClaimAsync(user, new Claim("UserId", student.Id.ToString()));
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    return LocalRedirect(returnUrl);
+                    return RedirectToAction("MyProfile", "Student");
+                    //return LocalRedirect(returnUrl);
                 }
                 foreach (var error in result.Errors)
                 {

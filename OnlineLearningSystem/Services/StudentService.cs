@@ -1,4 +1,5 @@
-﻿using OnlineLearningSystem.Models;
+﻿using OnlineLearningSystem.Common_Functionalities;
+using OnlineLearningSystem.Models;
 using OnlineLearningSystem.Repositories;
 using OnlineLearningSystem.ViewModels;
 
@@ -15,13 +16,8 @@ namespace OnlineLearningSystem.Services
 
         public async Task DislikeCourse(int studentId, int courseId)
         {
-            Student student = await unitOfWork.Students.GetByIdAsync(studentId);
-
-            if (student == null) { throw new ArgumentNullException($"There is no Student with Id = {studentId}"); }
-
-            Course course = await unitOfWork.Courses.GetByIdAsync(courseId);
-
-            if (course == null) { throw new ArgumentNullException($"There is no Course with Id = {courseId}"); }
+            Student student = await CheckAndGetStudentAsync(studentId);
+            Course course = await CheckAndGetCourseAsync(courseId);
 
             Like oldLike = await unitOfWork.Likes.GetWithConditionAsync(e => e.StudentId == studentId && e.CourseId == courseId);
 
@@ -38,11 +34,16 @@ namespace OnlineLearningSystem.Services
         {
             if(model == null) throw new ArgumentNullException("model is Null" );
 
-            Student student = await unitOfWork.Students.GetByIdAsync(model.Id);
+            Student student = await CheckAndGetStudentAsync(model.Id);
 
-            if (student == null) { throw new ArgumentNullException($"There is no Student with Id = {model.Id}"); }
-            if(model.ProfilePhoto == null) { throw new ArgumentNullException("Image file is null"); }
-            HandleProfileImageUpload(student, model.ProfilePhoto);
+            if (model.NewProfilePhoto != null)
+            {
+                FileHandler.HandleProfileImageUpload(student, model.NewProfilePhoto);
+            }
+            else
+            {
+                student.ProfilePhotoPath = model.OldProfilePhotoPath;
+            }
 
             student.BirthDate = model.BirthDate;
             student.FirstName = model.FirstName;
@@ -56,13 +57,8 @@ namespace OnlineLearningSystem.Services
 
         public async Task EnrollInCourse(int studentId, int courseId)
         {
-            Student student = await unitOfWork.Students.GetByIdAsync(studentId);
-
-            if (student == null) { throw new ArgumentNullException($"There is no Student with Id = {studentId}"); }
-
-            Course course = await unitOfWork.Courses.GetByIdAsync(courseId);
-
-            if (course == null) { throw new ArgumentNullException($"There is no Course with Id = {courseId}"); }
+            Student student = await CheckAndGetStudentAsync(studentId);
+            Course course = await CheckAndGetCourseAsync(courseId);
 
             Enrollment checkPrevEnrollment = await unitOfWork.Enrollments.GetWithConditionAsync(e => e.StudentId == studentId && e.CourseId == courseId);
 
@@ -96,13 +92,8 @@ namespace OnlineLearningSystem.Services
 
         public async Task FollowInstructor(int studentId, int instructorId)
         {
-            Student student = await unitOfWork.Students.GetByIdAsync(studentId);
-
-            if (student == null) { throw new ArgumentNullException($"There is no Student with Id = {studentId}"); }
-
-            Instructor instructor = await unitOfWork.Instructors.GetByIdAsync(instructorId);
-
-            if (instructor == null) { throw new ArgumentNullException($"There is no Instructor with Id = {instructorId}"); }
+            Student student = await CheckAndGetStudentAsync(studentId);
+            Instructor instructor = await CheckAndGetInstructorAsync(instructorId);
 
             Follow oldFollow = await unitOfWork.Follows.GetWithConditionAsync(e => e.StudentId == studentId && e.InstructorId == instructorId);
 
@@ -121,15 +112,39 @@ namespace OnlineLearningSystem.Services
             await unitOfWork.CompleteAsync();
         }
 
+        public async Task<StudentProfileViewModel> GetStudentProfileAsync(int id)
+        {
+            Student student = await CheckAndGetStudentAsync(id);
+
+            student = await unitOfWork.Students.GetWithEnrollmentsAsync(id);
+
+            List<ShowCourseInStudentProfileViewModel> myCourses = student.Enrollments.Select(e => new ShowCourseInStudentProfileViewModel()
+            {
+                EnrollDate = e.Date,
+                Description = e.Course.Description,
+                Id = e.Course.Id,
+                Name = e.Course.Name,
+                Prgress = e.Progress
+            }).ToList();
+
+            StudentProfileViewModel model = new StudentProfileViewModel()
+            {
+                Age = DateTime.Now.Year - student.BirthDate.Year,
+                Balance = student.Coins,
+                Bio = student.Bio,
+                Github = student.GitHubAccount,
+                Id = id,
+                Name = student.FirstName + " " + student.LastName,
+                ProfilePhoto = student.ProfilePhotoPath,
+                Courses = myCourses
+            };
+            return model;
+        }
+
         public async Task LikeCourse(int studentId, int courseId)
         {
-            Student student = await unitOfWork.Students.GetByIdAsync(studentId);
-
-            if (student == null) { throw new ArgumentNullException($"There is no Student with Id = {studentId}"); }
-
-            Course course = await unitOfWork.Courses.GetByIdAsync(courseId);
-
-            if (course == null) { throw new ArgumentNullException($"There is no Course with Id = {courseId}"); }
+            Student student = await CheckAndGetStudentAsync(studentId);
+            Course course = await CheckAndGetCourseAsync(courseId);
 
             Like oldLike = await unitOfWork.Likes.GetWithConditionAsync(e => e.StudentId == studentId && e.CourseId == courseId);
 
@@ -153,9 +168,7 @@ namespace OnlineLearningSystem.Services
                 throw new ArgumentNullException("Model is null");
             }
 
-            Student student = await unitOfWork.Students.GetByIdAsync(model.StudentId);
-
-            if (student == null) { throw new ArgumentNullException($"There is no Student with Id = {model.StudentId}"); }
+            Student student = await CheckAndGetStudentAsync(model.StudentId);
 
             if(model.Amount <= 0)
             {
@@ -177,13 +190,8 @@ namespace OnlineLearningSystem.Services
 
         public async Task UnfollowInstructor(int studentId, int instructorId)
         {
-            Student student = await unitOfWork.Students.GetByIdAsync(studentId);
-
-            if (student == null) { throw new ArgumentNullException($"There is no Student with Id = {studentId}"); }
-
-            Instructor instructor = await unitOfWork.Instructors.GetByIdAsync(instructorId);
-
-            if (instructor == null) { throw new ArgumentNullException($"There is no Instructor with Id = {instructorId}"); }
+            Student student = await CheckAndGetStudentAsync(studentId);
+            Instructor instructor = await CheckAndGetInstructorAsync(instructorId);
 
             Follow oldFollow = await unitOfWork.Follows.GetWithConditionAsync(e => e.StudentId == studentId && e.InstructorId == instructorId);
 
@@ -196,23 +204,50 @@ namespace OnlineLearningSystem.Services
             await unitOfWork.CompleteAsync();
         }
 
-        private void HandleProfileImageUpload(User user, IFormFile profileImageFile)
+        private async Task<Student> CheckAndGetStudentAsync(int studentId)
         {
-            if (profileImageFile != null && profileImageFile.Length > 0)
+            Student student = await unitOfWork.Students.GetByIdAsync(studentId);
+
+            if (student == null) { throw new ArgumentNullException($"There is no Student with Id = {studentId}"); }
+
+            return student;
+        }
+
+        private async Task<Course> CheckAndGetCourseAsync(int courseId)
+        {
+            Course course = await unitOfWork.Courses.GetByIdAsync(courseId);
+
+            if (course == null) { throw new ArgumentNullException($"There is no Course with Id = {courseId}"); }
+
+            return course;
+        }
+
+        private async Task<Instructor> CheckAndGetInstructorAsync(int instructorId)
+        {
+            Instructor instructor = await unitOfWork.Instructors.GetByIdAsync(instructorId);
+
+            if (instructor == null) { throw new ArgumentNullException($"There is no Instructor with Id = {instructorId}"); }
+
+            return instructor;
+        }
+
+        public async Task<EditStudentViewModel> GetStudentEditAsync(int studentId)
+        {
+            Student student = await CheckAndGetStudentAsync(studentId);
+
+            EditStudentViewModel model = new EditStudentViewModel()
             {
-                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
-                Directory.CreateDirectory(uploadsFolder);
+                Bio = student.Bio,
+                BirthDate = student.BirthDate,
+                FirstName = student.FirstName,
+                LastName = student.LastName,
+                Id = studentId,
+                GithubAccount = student.GitHubAccount,
+                OldProfilePhotoPath = student.ProfilePhotoPath,
+                NewProfilePhoto = null
+            };
 
-                var fileName = $"{user.Id}_{Path.GetFileName(profileImageFile.FileName)}";
-                var filePath = Path.Combine(uploadsFolder, fileName);
-
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    profileImageFile.CopyTo(fileStream);
-                }
-
-                user.ProfilePhotoPath = "/images/" + fileName;
-            }
+            return model;            
         }
     }
 }

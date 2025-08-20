@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using OnlineLearningSystem.Common_Functionalities;
 using OnlineLearningSystem.Models;
 using OnlineLearningSystem.Repositories;
 using OnlineLearningSystem.ViewModels;
@@ -63,7 +64,7 @@ namespace OnlineLearningSystem.Services
                 IdentityId = userId
             };
 
-            HandleProfileImageUpload(instructor, model.ProfilePhotoPath);
+            FileHandler.HandleProfileImageUpload(instructor, model.ProfilePhotoPath);
 
             await unitOfWork.Instructors.AddAsync(instructor);
             await unitOfWork.CompleteAsync();
@@ -76,28 +77,11 @@ namespace OnlineLearningSystem.Services
             if (student == null) throw new ArgumentNullException($"Student Is Null");
             if (file == null) throw new ArgumentNullException($"File Is Null");
 
-            HandleProfileImageUpload(student, file);
+            FileHandler.HandleProfileImageUpload(student, file);
             await unitOfWork.Students.AddAsync(student);
             await unitOfWork.CompleteAsync();
         }
 
-        private void HandleProfileImageUpload(User user, IFormFile profileImageFile)
-        {
-            if (profileImageFile != null && profileImageFile.Length > 0)
-            {
-                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
-                Directory.CreateDirectory(uploadsFolder);
-
-                var fileName = $"{user.Id}_{Path.GetFileName(profileImageFile.FileName)}";
-                var filePath = Path.Combine(uploadsFolder, fileName);
-
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    profileImageFile.CopyTo(fileStream);
-                }
-
-                user.ProfilePhotoPath = "/images/" + fileName;
-            }
-        }
+        
     }
 }

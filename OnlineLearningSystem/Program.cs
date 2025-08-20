@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OnlineLearningSystem.Data;
 using OnlineLearningSystem.Middlewares;
+using OnlineLearningSystem.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 

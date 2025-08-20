@@ -1,0 +1,95 @@
+﻿@model OnlineLearningSystem.ViewModels.StudentProfileViewModel
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="container mt-5 mb-5">
+    <div class="shadow-lg border-0 rounded-4 overflow-hidden bg-white">
+        <!-- Profile Header -->
+        <div class="bg-primary text-white text-center p-5 position-relative">
+            <img src="@(string.IsNullOrEmpty(Model.ProfilePhoto) ? "/images/default-profile.png" : Model.ProfilePhoto)"
+                 alt="Profile Photo"
+                 class="rounded-circle border border-3 border-white shadow position-absolute top-100 start-50 translate-middle"
+                 style="width: 160px; height: 160px; object-fit: cover;" />
+        </div>
+
+        <div class="mt-5 pt-5 px-5 pb-5">
+            <!-- Profile Info -->
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-1">@Model.Name</h2>
+                <p class="text-muted mb-0">@Model.Bio</p>
+            </div>
+
+            <!-- Personal Data (Clean Vertical List) -->
+            <div class="mb-5">
+                <h4 class="fw-bold mb-4">Personal Information</h4>
+                <div class="ps-2">
+                    <div class="mb-3">
+                        <span class="fw-semibold text-primary me-2">Age:</span>
+                        <span>@Model.Age</span>
+                    </div>
+                    <div class="mb-3">
+                        <span class="fw-semibold text-primary me-2">Balance:</span>
+                        <span class="fw-bold text-success">$@Model.Balance</span>
+                    </div>
+                    <div class="mb-3">
+                        <span class="fw-semibold text-primary me-2">GitHub:</span>
+                        @if (!string.IsNullOrEmpty(Model.Github))
+                        {
+                            <a href="@Model.Github" target="_blank" class="link-dark text-decoration-none">
+                                <i class="bi bi-github"></i> Visit GitHub
+                            </a>
+                        }
+                        else
+                        {
+                            <span class="text-muted">Not Provided</span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Courses Section -->
+            <div class="mt-5">
+                <h4 class="fw-bold mb-4">My Courses</h4>
+
+                @if (Model.Courses != null && Model.Courses.Any())
+                {
+                    <ul class="list-group list-group-flush">
+                        @foreach (var course in Model.Courses)
+                        {
+                            <li class="list-group-item py-4">
+                                <h5 class="fw-bold">@course.Name</h5>
+                                <p class="text-muted small">@course.Description</p>
+
+                                <p class="mb-1"><strong>Enrolled:</strong> @course.EnrollDate.ToString("MMMM dd, yyyy")</p>
+
+                                <!-- Progress Bar -->
+                                <div class="mb-2">
+                                    <div class="progress" style="height: 10px;">
+                                        <div class="progress-bar bg-success" role="progressbar"
+                                             style="width: @course.Prgress%;"
+                                             aria-valuenow="@course.Prgress" aria-valuemin="0" aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                    <small class="text-muted">@course.Prgress% complete</small>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p class="text-muted">You are not enrolled in any courses yet.</p>
+                }
+            </div>
+
+            <!-- Edit Button -->
+            <div class="d-flex justify-content-center mt-5">
+                <a asp-action="EditProfile" asp-route-id="@Model.Id" class="btn btn-primary btn-lg px-4 me-3 shadow-sm">
+                    <i class="bi bi-pencil-square"></i> Edit Profile
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

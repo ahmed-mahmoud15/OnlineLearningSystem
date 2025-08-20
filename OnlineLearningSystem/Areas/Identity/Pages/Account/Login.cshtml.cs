@@ -133,7 +133,7 @@ namespace OnlineLearningSystem.Areas.Identity.Pages.Account
                     else if (roles.Contains("Student"))
                     {
                         //return RedirectToAction("Home", "Student", new { id = appUser.Id });
-                        return LocalRedirect(returnUrl);
+                        return RedirectToAction("MyProfile", "Student");
                     }
                     else if (roles.Contains("Instructor"))
                     {

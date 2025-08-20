@@ -24,7 +24,10 @@ namespace OnlineLearningSystem.ViewModels
         [Display(Name = "GitHub")]
         public string? GithubAccount { get; set; }
 
-        [Display(Name = "Profile Photo Path")]
-        public IFormFile ProfilePhoto { get; set; }
+        [Display(Name = "Profile Photo")]
+        public string OldProfilePhotoPath { get; set; }
+
+        [Display(Name = "Profile Photo")]
+        public IFormFile? NewProfilePhoto { get; set; }
     }
 }

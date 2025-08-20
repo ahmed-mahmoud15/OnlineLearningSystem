@@ -15,7 +15,7 @@ namespace OnlineLearningSystem.Repositories
 
         public async Task<Student> GetWithEnrollmentsAsync(int studentId)
         {
-            var result = await context.Students.Include(e => e.Enrollments).FirstOrDefaultAsync(e => e.Id == studentId);
+            var result = await context.Students.Include(e => e.Enrollments).ThenInclude(e => e.Course).FirstOrDefaultAsync(e => e.Id == studentId);
             return result ?? throw new InvalidOperationException();
         }
 
