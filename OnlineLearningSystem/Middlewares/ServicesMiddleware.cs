@@ -10,6 +10,7 @@ namespace OnlineLearningSystem.Middlewares
             services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<IInstructorService, InstructorService>();
             services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<ICategoryService, CategoryService>();
             return services;
         }
     }

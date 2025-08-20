@@ -1,0 +1,110 @@
+﻿@model OnlineLearningSystem.ViewModels.EditInstructorViewModel
+
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3 class="mb-0">Edit Profile</h3>
+                </div>
+                <div class="card-body p-4">
+
+                    <!-- Profile Picture Preview -->
+                    <div class="text-center mb-4">
+                        @if (!string.IsNullOrEmpty(Model.OldProfilePhotoPath))
+                        {
+                            <img src="@Model.OldProfilePhotoPath"
+                                 class="rounded-circle shadow"
+                                 style="width: 120px; height: 120px; object-fit: cover;"
+                                 alt="Profile Photo" />
+                        }
+                        else
+                        {
+                            <img src="~/images/default-profile.png"
+                                 class="rounded-circle shadow"
+                                 style="width: 120px; height: 120px; object-fit: cover;"
+                                 alt="Default Profile Photo" />
+                        }
+                    </div>
+
+                    <form asp-action="EditProfile" enctype="multipart/form-data">
+                        <!-- Hidden fields -->
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="OldProfilePhotoPath" />
+
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="FirstName" class="form-label fw-bold"></label>
+                            <input asp-for="FirstName" class="form-control" placeholder="Enter your first name" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="LastName" class="form-label fw-bold"></label>
+                            <input asp-for="LastName" class="form-control" placeholder="Enter your last name" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="BirthDate" class="form-label fw-bold"></label>
+                            <input asp-for="BirthDate" type="date" class="form-control" />
+                            <span asp-validation-for="BirthDate" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Bio" class="form-label fw-bold"></label>
+                            <textarea asp-for="Bio" class="form-control" rows="3" placeholder="Write something about yourself"></textarea>
+                            <span asp-validation-for="Bio" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="LinkedInAccount" class="form-label fw-bold"></label>
+                            <input asp-for="LinkedInAccount" class="form-control" placeholder="Enter your LinkedIn profile link" />
+                            <span asp-validation-for="LinkedInAccount" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Experience" class="form-label fw-bold"></label>
+                            <textarea asp-for="Experience" class="form-control" rows="3" placeholder="Add your teaching/professional experience"></textarea>
+                            <span asp-validation-for="Experience" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="YearsofExperience" class="form-label fw-bold"></label>
+                            <input asp-for="YearsofExperience" class="form-control" rows="3" placeholder="Add your years of teaching experience"></input>
+                            <span asp-validation-for="YearsofExperience" class="text-danger"></span>
+                        </div>
+
+                        <!-- Optional new profile photo -->
+                        <div class="mb-3">
+                            <label asp-for="NewProfilePhoto" class="form-label fw-bold"></label>
+                            <input asp-for="NewProfilePhoto" type="file" class="form-control" />
+                            <span asp-validation-for="NewProfilePhoto" class="text-danger"></span>
+                            <small class="text-muted">Leave empty if you don’t want to change the photo.</small>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a asp-action="MyProfile" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Back
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

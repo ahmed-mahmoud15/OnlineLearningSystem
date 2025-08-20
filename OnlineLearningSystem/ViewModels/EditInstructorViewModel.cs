@@ -28,6 +28,9 @@ namespace OnlineLearningSystem.ViewModels
         [Display(Name = "Experience")]
         public string? Experience { get; set; }
 
+        [Display(Name = "Years of Teaching Experience")]
+        public int YearsofExperience { get; set; }
+
         [Display(Name = "Profile Photo")]
         public string OldProfilePhotoPath { get; set; }
 

@@ -14,7 +14,7 @@ namespace OnlineLearningSystem.Controllers
             this.adminService = adminService;
         }
 
-        public async Task<IActionResult> MyProfile()
+        public async Task<IActionResult> Dashboard()
         {
             return View();
         }

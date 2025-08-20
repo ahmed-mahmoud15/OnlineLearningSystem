@@ -25,7 +25,7 @@ namespace OnlineLearningSystem.Services
             return unitOfWork.Users.GetByIdentityId(identityId);
         }
 
-        public Task RegisterAdmin(User user, IFormFile file)
+        public async Task RegisterAdmin(User user, IFormFile file)
         {
             throw new NotImplementedException();
         }
@@ -71,6 +71,7 @@ namespace OnlineLearningSystem.Services
 
             await userManager.AddClaimAsync(user, new Claim("UserId", instructor.Id.ToString()));
         }
+
 
         public async Task RegisterStudent(Student student, IFormFile file)
         {

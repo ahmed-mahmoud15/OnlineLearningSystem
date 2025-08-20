@@ -1,4 +1,4 @@
-﻿@model OnlineLearningSystem.ViewModels.StudentProfileViewModel
+﻿@model OnlineLearningSystem.ViewModels.InstructorProfileViewModel
 
 @{
     ViewData["Title"] = "My Profile";
@@ -7,19 +7,22 @@
 <div class="container mt-5 mb-5">
     <div class="shadow-lg border-0 rounded-4 overflow-hidden bg-white">
 
-        <!-- Profile + Personal Details -->
         @await Html.PartialAsync("_ProfileDetails", Model)
 
         <div class="mt-5 pt-4 px-5 pb-5">
 
             <!-- Courses Section -->
-            @await Html.PartialAsync("_StudentCourses", Model.Courses)
+            @await Html.PartialAsync("_InstructorCourses", Model.Courses)
 
             <!-- Actions -->
             <div class="d-flex justify-content-center mt-5">
                 <a asp-action="EditProfile" asp-route-id="@Model.Id"
                    class="btn btn-primary btn-lg px-4 me-3 shadow-sm">
                     <i class="bi bi-pencil-square"></i> Edit Profile
+                </a>
+                <a asp-action="AddCourse" asp-route-id="@Model.Id"
+                   class="btn btn-success btn-lg px-4 shadow-sm">
+                    <i class="bi bi-plus-circle"></i> Add Course
                 </a>
             </div>
         </div>

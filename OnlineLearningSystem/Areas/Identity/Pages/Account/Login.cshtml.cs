@@ -128,7 +128,7 @@ namespace OnlineLearningSystem.Areas.Identity.Pages.Account
                     if (roles.Contains("Admin"))
                     {
                         // redirect lel admin dashboard
-                        return LocalRedirect(returnUrl);
+                        return RedirectToAction("Dashboard", "Admin");
                     }
                     else if (roles.Contains("Student"))
                     {
@@ -138,7 +138,7 @@ namespace OnlineLearningSystem.Areas.Identity.Pages.Account
                     else if (roles.Contains("Instructor"))
                     {
                         //return RedirectToAction("Home", "Instructor", new { id = appUser.Id });
-                        return LocalRedirect(returnUrl);
+                        return RedirectToAction("MyProfile", "Instructor");
                     }
                     else
                     {

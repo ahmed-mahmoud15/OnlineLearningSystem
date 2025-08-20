@@ -2,7 +2,7 @@
 
 namespace OnlineLearningSystem.Repositories
 {
-    public interface IUserRepository
+    public interface IUserRepository : IRepository<User>
     {
         public Task<User> GetByIdentityId(string identityId);
     }

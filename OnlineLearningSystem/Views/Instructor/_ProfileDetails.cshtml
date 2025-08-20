@@ -1,0 +1,48 @@
+﻿@model OnlineLearningSystem.ViewModels.InstructorProfileViewModel
+
+<!-- Profile Header -->
+<div class="bg-primary text-white text-center p-5 position-relative">
+    <img src="@(string.IsNullOrEmpty(Model.ProfilePhoto) ? "/images/default-profile.png" : Model.ProfilePhoto)"
+         alt="Profile Photo"
+         class="rounded-circle border border-3 border-white shadow position-absolute top-100 start-50 translate-middle"
+         style="width: 160px; height: 160px; object-fit: cover;" />
+</div>
+
+<!-- Profile Info & Personal Data -->
+<div class="mt-5 pt-5 px-5 pb-3">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold mb-1">@Model.Name</h2>
+        <p class="text-muted mb-0">@Model.Bio</p>
+    </div>
+
+    <div class="mb-5">
+        <h4 class="fw-bold mb-4">Personal Information</h4>
+        <div class="ps-2">
+            <div class="mb-3">
+                <span class="fw-semibold text-primary me-2">Age:</span>
+                <span>@Model.Age</span>
+            </div>
+            <div class="mb-3">
+                <span class="fw-semibold text-primary me-2">Years of Experience:</span>
+                <span class="fw-bold text-success">@Model.YearsOfExperience years</span>
+            </div>
+            <div class="mb-3">
+                <span class="fw-semibold text-primary me-2">LinkedIn:</span>
+                @if (!string.IsNullOrEmpty(Model.LinkedIn))
+                {
+                    <a href="@Model.LinkedIn" target="_blank" class="link-primary text-decoration-none">
+                        <i class="bi bi-linkedin"></i> Visit LinkedIn
+                    </a>
+                }
+                else
+                {
+                    <span class="text-muted">Not Provided</span>
+                }
+            </div>
+            <div class="mb-3">
+                <span class="fw-semibold text-primary me-2">Experiences:</span>
+                <span>@Model.Experiences</span>
+            </div>
+        </div>
+    </div>
+</div>
