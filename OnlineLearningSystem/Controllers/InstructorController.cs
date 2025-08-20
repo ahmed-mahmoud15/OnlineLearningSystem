@@ -10,11 +10,13 @@ namespace OnlineLearningSystem.Controllers
     {
         private readonly IInstructorService instructorService;
         private readonly ICategoryService categoryService;
+        private readonly ICourseService courseService;
 
-        public InstructorController(IInstructorService instructorService, ICategoryService categoryService)
+        public InstructorController(IInstructorService instructorService, ICategoryService categoryService, ICourseService courseService)
         {
             this.instructorService = instructorService;
             this.categoryService = categoryService;
+            this.courseService = courseService;
         }
 
         public async Task<IActionResult> MyProfile()
@@ -77,7 +79,7 @@ namespace OnlineLearningSystem.Controllers
         {
             try
             {
-                await instructorService.AddCourseAsync(model);
+                await courseService.AddCourseAsync(model);
             }
             catch (ArgumentNullException ex)
             {

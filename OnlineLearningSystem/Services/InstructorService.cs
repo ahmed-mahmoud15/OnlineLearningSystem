@@ -20,7 +20,7 @@ namespace OnlineLearningSystem.Services
         {
             if (model == null) throw new ArgumentNullException("model is Null");
 
-            Instructor instructor = await CheckAndGetInstructorAsync(model.Id);
+            Instructor instructor = await CheckEntity.CheckAndGetInstructorAsync(model.Id, unitOfWork);
 
             if (model.NewProfilePhoto != null)
             {
@@ -43,36 +43,10 @@ namespace OnlineLearningSystem.Services
             await unitOfWork.CompleteAsync();
         }
 
-        private async Task<Student> CheckAndGetStudentAsync(int studentId)
-        {
-            Student student = await unitOfWork.Students.GetByIdAsync(studentId);
-
-            if (student == null) { throw new ArgumentNullException($"There is no Student with Id = {studentId}"); }
-
-            return student;
-        }
-
-        private async Task<Course> CheckAndGetCourseAsync(int courseId)
-        {
-            Course course = await unitOfWork.Courses.GetByIdAsync(courseId);
-
-            if (course == null) { throw new ArgumentNullException($"There is no Course with Id = {courseId}"); }
-
-            return course;
-        }
-
-        private async Task<Instructor> CheckAndGetInstructorAsync(int instructorId)
-        {
-            Instructor instructor = await unitOfWork.Instructors.GetByIdAsync(instructorId);
-
-            if (instructor == null) { throw new ArgumentNullException($"There is no Instructor with Id = {instructorId}"); }
-
-            return instructor;
-        }
-
+        
         public async Task<InstructorProfileViewModel> GetInstructorProfileAsync(int id)
         {
-            Instructor instructor = await CheckAndGetInstructorAsync(id);
+            Instructor instructor = await CheckEntity.CheckAndGetInstructorAsync(id, unitOfWork);
 
             instructor = await unitOfWork.Instructors.GetWithCoursesAsync(id);
 
@@ -102,7 +76,7 @@ namespace OnlineLearningSystem.Services
 
         public async Task<EditInstructorViewModel> GetInstructorEditAsync(int instructorId)
         {
-            Instructor instructor = await CheckAndGetInstructorAsync(instructorId);
+            Instructor instructor = await CheckEntity.CheckAndGetInstructorAsync(instructorId, unitOfWork);
 
             EditInstructorViewModel model = new EditInstructorViewModel()
             {
@@ -119,28 +93,6 @@ namespace OnlineLearningSystem.Services
             };
 
             return model;
-        }
-
-        public async Task AddCourseAsync(AddCourseViewModel model)
-        {
-            if(model == null)
-            {
-                throw new ArgumentNullException("model is null");
-            }
-
-            Instructor instructor = await CheckAndGetInstructorAsync(model.InstructorId);
-
-            Course course = new Course() {
-                Name = model.Name,
-                InstructorId = model.InstructorId,
-                CategoryId = model.CategoryId,
-                CreationDate = DateTime.UtcNow,
-                Description = model.Description,
-                Price = model.Price
-            };
-
-            await unitOfWork.Courses.AddAsync(course);
-            await unitOfWork.CompleteAsync();
         }
     }
 }

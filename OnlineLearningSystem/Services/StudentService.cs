@@ -16,8 +16,8 @@ namespace OnlineLearningSystem.Services
 
         public async Task DislikeCourse(int studentId, int courseId)
         {
-            Student student = await CheckAndGetStudentAsync(studentId);
-            Course course = await CheckAndGetCourseAsync(courseId);
+            Student student = await CheckEntity.CheckAndGetStudentAsync(studentId, unitOfWork);
+            Course course = await CheckEntity.CheckAndGetCourseAsync(courseId, unitOfWork);
 
             Like oldLike = await unitOfWork.Likes.GetWithConditionAsync(e => e.StudentId == studentId && e.CourseId == courseId);
 
@@ -34,7 +34,7 @@ namespace OnlineLearningSystem.Services
         {
             if(model == null) throw new ArgumentNullException("model is Null" );
 
-            Student student = await CheckAndGetStudentAsync(model.Id);
+            Student student = await CheckEntity.CheckAndGetStudentAsync(model.Id, unitOfWork);
 
             if (model.NewProfilePhoto != null)
             {
@@ -55,45 +55,10 @@ namespace OnlineLearningSystem.Services
             await unitOfWork.CompleteAsync();
         }
 
-        public async Task EnrollInCourse(int studentId, int courseId)
-        {
-            Student student = await CheckAndGetStudentAsync(studentId);
-            Course course = await CheckAndGetCourseAsync(courseId);
-
-            Enrollment checkPrevEnrollment = await unitOfWork.Enrollments.GetWithConditionAsync(e => e.StudentId == studentId && e.CourseId == courseId);
-
-            if (checkPrevEnrollment != null)
-            {
-                throw new InvalidOperationException("This student already enrolled in this course before");
-            }
-
-            if(student.Coins < course.Price)
-            {
-                throw new InvalidOperationException("Student doesn't have enough Coins to proceed in this enrollment");
-            }
-
-            Enrollment enrollment = new Enrollment()
-            {
-                CourseId = courseId,
-                StudentId = studentId,
-                Date = DateTime.UtcNow,
-                Progress = 0,
-                LastViewedLesson = 0
-            };
-
-            student.Coins -= course.Price;
-
-            
-            unitOfWork.Students.Update(student);
-            await unitOfWork.Enrollments.AddAsync(enrollment);
-
-            await unitOfWork.CompleteAsync();
-        }
-
         public async Task FollowInstructor(int studentId, int instructorId)
         {
-            Student student = await CheckAndGetStudentAsync(studentId);
-            Instructor instructor = await CheckAndGetInstructorAsync(instructorId);
+            Student student = await CheckEntity.CheckAndGetStudentAsync(studentId, unitOfWork);
+            Instructor instructor = await CheckEntity.CheckAndGetInstructorAsync(instructorId, unitOfWork);
 
             Follow oldFollow = await unitOfWork.Follows.GetWithConditionAsync(e => e.StudentId == studentId && e.InstructorId == instructorId);
 
@@ -114,7 +79,7 @@ namespace OnlineLearningSystem.Services
 
         public async Task<StudentProfileViewModel> GetStudentProfileAsync(int id)
         {
-            Student student = await CheckAndGetStudentAsync(id);
+            Student student = await CheckEntity.CheckAndGetStudentAsync(id, unitOfWork);
 
             student = await unitOfWork.Students.GetWithEnrollmentsAsync(id);
 
@@ -143,8 +108,8 @@ namespace OnlineLearningSystem.Services
 
         public async Task LikeCourse(int studentId, int courseId)
         {
-            Student student = await CheckAndGetStudentAsync(studentId);
-            Course course = await CheckAndGetCourseAsync(courseId);
+            Student student = await CheckEntity.CheckAndGetStudentAsync(studentId, unitOfWork);
+            Course course = await CheckEntity.CheckAndGetCourseAsync(courseId, unitOfWork);
 
             Like oldLike = await unitOfWork.Likes.GetWithConditionAsync(e => e.StudentId == studentId && e.CourseId == courseId);
 
@@ -168,7 +133,7 @@ namespace OnlineLearningSystem.Services
                 throw new ArgumentNullException("Model is null");
             }
 
-            Student student = await CheckAndGetStudentAsync(model.StudentId);
+            Student student = await CheckEntity.CheckAndGetStudentAsync(model.StudentId, unitOfWork);
 
             if(model.Amount <= 0)
             {
@@ -190,8 +155,8 @@ namespace OnlineLearningSystem.Services
 
         public async Task UnfollowInstructor(int studentId, int instructorId)
         {
-            Student student = await CheckAndGetStudentAsync(studentId);
-            Instructor instructor = await CheckAndGetInstructorAsync(instructorId);
+            Student student = await CheckEntity.CheckAndGetStudentAsync(studentId, unitOfWork);
+            Instructor instructor = await CheckEntity.CheckAndGetInstructorAsync(instructorId, unitOfWork);
 
             Follow oldFollow = await unitOfWork.Follows.GetWithConditionAsync(e => e.StudentId == studentId && e.InstructorId == instructorId);
 
@@ -204,36 +169,9 @@ namespace OnlineLearningSystem.Services
             await unitOfWork.CompleteAsync();
         }
 
-        private async Task<Student> CheckAndGetStudentAsync(int studentId)
-        {
-            Student student = await unitOfWork.Students.GetByIdAsync(studentId);
-
-            if (student == null) { throw new ArgumentNullException($"There is no Student with Id = {studentId}"); }
-
-            return student;
-        }
-
-        private async Task<Course> CheckAndGetCourseAsync(int courseId)
-        {
-            Course course = await unitOfWork.Courses.GetByIdAsync(courseId);
-
-            if (course == null) { throw new ArgumentNullException($"There is no Course with Id = {courseId}"); }
-
-            return course;
-        }
-
-        private async Task<Instructor> CheckAndGetInstructorAsync(int instructorId)
-        {
-            Instructor instructor = await unitOfWork.Instructors.GetByIdAsync(instructorId);
-
-            if (instructor == null) { throw new ArgumentNullException($"There is no Instructor with Id = {instructorId}"); }
-
-            return instructor;
-        }
-
         public async Task<EditStudentViewModel> GetStudentEditAsync(int studentId)
         {
-            Student student = await CheckAndGetStudentAsync(studentId);
+            Student student = await CheckEntity.CheckAndGetStudentAsync(studentId, unitOfWork);
 
             EditStudentViewModel model = new EditStudentViewModel()
             {
