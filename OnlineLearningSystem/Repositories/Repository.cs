@@ -58,5 +58,10 @@ namespace OnlineLearningSystem.Repositories
         {
             return await table.Where(predicate).ToListAsync();
         }
+
+        public void DeleteObject(T record)
+        {
+            table.Remove(record);
+        }
     }
 }

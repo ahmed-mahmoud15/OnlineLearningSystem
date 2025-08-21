@@ -11,13 +11,16 @@ namespace OnlineLearningSystem.Controllers
         private readonly ICourseService courseService;
         private readonly IEnrollmentService enrollmentService;
         private readonly ICategoryService categoryService;
+        private readonly ILikeService likeService;
 
-        
-        public CourseController(ICategoryService categoryService, ICourseService courseService, IEnrollmentService enrollmentService)
+
+
+        public CourseController(ICategoryService categoryService, ICourseService courseService, IEnrollmentService enrollmentService, ILikeService likeService)
         {
             this.courseService = courseService;
             this.enrollmentService = enrollmentService;
             this.categoryService = categoryService;
+            this.likeService = likeService;
         }
 
         [HttpGet]
@@ -46,18 +49,21 @@ namespace OnlineLearningSystem.Controllers
             {
                 return NotFound(ex.Message);
             }
-            return RedirectToAction("MyProfile");
+            return RedirectToAction("MyProfile", "Instructor");
         }
 
         [HttpGet]
         public async Task<IActionResult> CourseDetails(int id) {
             bool isEnrolled = false;
+            bool isLiked = false;
             if (User.Identity.IsAuthenticated && User.IsInRole("Student"))
             {
                 var userId = int.Parse(User.FindFirst("UserId")?.Value);
                 isEnrolled = await enrollmentService.IsStudentEnrolledInCourseAsync(userId, id);
+                isLiked = await likeService.IsStudentLikedCourse(userId, id);
             }
             ViewBag.IsEnrolled = isEnrolled;
+            ViewBag.IsLiked = isLiked;
             return View(await courseService.GetCourseDetailsAsync(id));
         }
 

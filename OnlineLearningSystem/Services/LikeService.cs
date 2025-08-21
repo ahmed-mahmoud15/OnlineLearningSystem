@@ -47,8 +47,18 @@ namespace OnlineLearningSystem.Services
                 throw new InvalidOperationException("This student didn't like this course before");
             }
 
-            await unitOfWork.Likes.DeleteAsync(oldLike);
+            unitOfWork.Likes.DeleteObject(oldLike);
             await unitOfWork.CompleteAsync();
+        }
+
+        public async Task<bool> IsStudentLikedCourse(int studentId, int courseId)
+        {
+            Student student = await CheckEntity.CheckAndGetStudentAsync(studentId, unitOfWork);
+            Course course = await CheckEntity.CheckAndGetCourseAsync(courseId, unitOfWork);
+
+            Like oldLike = await unitOfWork.Likes.GetWithConditionAsync(e => e.StudentId == studentId && e.CourseId == courseId);
+
+            return oldLike != null;
         }
     }
 }

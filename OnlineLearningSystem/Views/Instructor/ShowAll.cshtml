@@ -1,0 +1,37 @@
+﻿@model IEnumerable<OnlineLearningSystem.ViewModels.ShowInstructorInfoViewModel>
+
+@{
+    ViewData["Title"] = "Instructors";
+}
+
+<h1 class="mb-4">All Instructors</h1>
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-12 mb-4">
+            <div class="card shadow-sm w-100">
+                <div class="row g-0 align-items-center">
+                    <!-- Profile Photo -->
+                    <div class="col-md-3 text-center p-3">
+                        <img src="@item.ProfilePhoto" alt="@item.Name" class="img-fluid" style="max-width: 150px; height: 150px; object-fit: cover;" />
+                    </div>
+
+                    <!-- Info -->
+                    <div class="col-md-9">
+                        <div class="card-body">
+                            <h4 class="card-title">
+                                <a asp-controller="Instructor" asp-action="Profile" asp-route-id="@item.Id" class="text-decoration-none text-primary fw-bold">
+                                    @item.Name
+                                </a>
+                            </h4>
+                            <p class="card-text mb-1"><strong>Courses:</strong> @item.NumberOfCourses</p>
+                            <p class="card-text mb-1"><strong>Followers:</strong> @item.NumberOfFollowers</p>
+                            <p class="card-text mb-0"><strong>Experience:</strong> @item.YearsOfExperience years</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

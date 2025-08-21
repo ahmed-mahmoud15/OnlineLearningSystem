@@ -36,6 +36,16 @@ namespace OnlineLearningSystem.Services
             await unitOfWork.CompleteAsync();
         }
 
+        public async Task<bool> IsStudentFollowingInstructor(int studentId, int instructorId)
+        {
+            Student student = await CheckEntity.CheckAndGetStudentAsync(studentId, unitOfWork);
+            Instructor instructor = await CheckEntity.CheckAndGetInstructorAsync(instructorId, unitOfWork);
+
+            Follow oldFollow = await unitOfWork.Follows.GetWithConditionAsync(e => e.StudentId == studentId && e.InstructorId == instructorId);
+
+            return oldFollow != null;
+        }
+
         public async Task UnfollowInstructor(int studentId, int instructorId)
         {
             Student student = await CheckEntity.CheckAndGetStudentAsync(studentId, unitOfWork);
@@ -48,7 +58,7 @@ namespace OnlineLearningSystem.Services
                 throw new InvalidOperationException("This student is not following this instructor");
             }
 
-            await unitOfWork.Follows.DeleteAsync(oldFollow);
+            unitOfWork.Follows.DeleteObject(oldFollow);
             await unitOfWork.CompleteAsync();
         }
     }

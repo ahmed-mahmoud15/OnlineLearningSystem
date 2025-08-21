@@ -1,0 +1,45 @@
+﻿@model OnlineLearningSystem.ViewModels.InstructorProfileViewModel
+
+@{
+    ViewData["Title"] = "Profile";
+
+    var isFollowing = (bool)(ViewBag.IsFollowing ?? false);
+    var isStudent = User.IsInRole("Student");
+}
+
+<div class="container mt-5 mb-5">
+    <div class="shadow-lg border-0 rounded-4 overflow-hidden bg-white">
+
+        @await Html.PartialAsync("_ProfileDetails", Model)
+
+        <div class="mt-5 pt-4 px-5 pb-5">
+
+            <!-- Courses Section -->
+            @await Html.PartialAsync("_InstructorCourses", Model.Courses)
+
+            <!-- Actions -->
+            <div class="d-flex justify-content-center mt-5">
+                @if (isStudent)
+                {
+                    @if (isFollowing)
+                    {
+                        <form asp-controller="Follow" asp-action="Unfollow" method="post">
+                            <input type="hidden" name="instructorId" value="@Model.Id" />
+                            <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                            <button type="submit" class="btn btn-danger">Unfollow</button>
+                        </form>
+                    }
+                    else
+                    {
+                        
+                        <form asp-controller="Follow" asp-action="Follow" method="post">
+                            <input type="hidden" name="instructorId" value="@Model.Id" />
+                            <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                            <button type="submit" class="btn btn-primary">Follow</button>
+                        </form>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

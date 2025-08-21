@@ -11,6 +11,7 @@ namespace OnlineLearningSystem.Repositories
         public Task AddAsync(T entity);
         public void Update(T entity);
         public Task DeleteAsync(object id);
+        public void DeleteObject(T record);
         public Task SaveAsync();
     }
 }

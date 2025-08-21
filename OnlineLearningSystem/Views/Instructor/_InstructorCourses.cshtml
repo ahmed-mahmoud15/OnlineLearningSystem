@@ -1,4 +1,10 @@
-﻿@model IEnumerable<OnlineLearningSystem.ViewModels.ShowCourseInInstructorProfileViewModel>
+﻿@model IEnumerable<ShowCourseInInstructorProfileViewModel>
+@inject OnlineLearningSystem.Services.IEnrollmentService enrollmentService
+@{
+    var isAuthenticated = User.Identity.IsAuthenticated;
+    var isStudent = User.IsInRole("Student");
+    var isInstructor = User.IsInRole("Instructor");
+}
 
 <div class="mt-5">
     <h4 class="fw-bold mb-4">Courses I Teach</h4>
@@ -19,10 +25,33 @@
                                 <span><i class="bi bi-journal-text"></i> @course.CountLessons Lessons</span>
                             </div>
 
-                            <a asp-action="CourseDetails" asp-controller="Course" asp-route-id="@course.Id"
-                               class="btn btn-success btn-lg px-4 shadow-sm">
-                                <i class="bi bi-plus-circle"></i> View Course
-                            </a>
+                            @if (isAuthenticated)
+                            {
+                                @if (isStudent)
+                                {
+                                    @if (!await enrollmentService.IsStudentEnrolledInCourseAsync(int.Parse(User.FindFirst("UserId")?.Value), course.Id))
+                                    {
+                                        <form asp-controller="Enrollment" asp-action="Enroll" method="post">
+                                            <input type="hidden" name="studentId" value="@int.Parse(User.FindFirst("UserId")?.Value)" />
+                                            <input type="hidden" name="courseId" value="@course.Id" />
+                                            <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                            <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">Enroll</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn btn-primary rounded-pill px-4 shadow-sm" disabled>
+                                            Already Enrolled
+                                        </button>
+                                    }
+                                }else if (isInstructor)
+                                {
+                                    <a asp-action="CourseDetails" asp-controller="Course" asp-route-id="@course.Id"
+                                       class="btn btn-success btn-lg px-4 shadow-sm">
+                                        <i class="bi bi-plus-circle"></i> View Course
+                                    </a>
+                                }
+                            }
                         </div>
                     </div>
                 </div>

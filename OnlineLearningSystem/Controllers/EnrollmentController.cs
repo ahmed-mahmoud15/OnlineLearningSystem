@@ -14,7 +14,7 @@ namespace OnlineLearningSystem.Controllers
         }
         
         [Authorize(Roles = "Student")]
-        public async Task<IActionResult> Enroll(int studentId, int courseId)
+        public async Task<IActionResult> Enroll(int studentId, int courseId, string returnUrl = null)
         {
             int userId = int.Parse(User.FindFirst("UserId")?.Value);
 
@@ -25,17 +25,21 @@ namespace OnlineLearningSystem.Controllers
             try
             {
                 await enrollmentService.EnrollInCourse(studentId, courseId);
+                TempData["AlertMessage"] = "You have successfully enrolled in this course.";
+                TempData["AlertType"] = "success";
             }
             catch (ArgumentNullException ex)
             {
-                return NotFound(ex.Message);
+                TempData["AlertMessage"] = ex.Message;
+                TempData["AlertType"] = "warning";
             }
             catch (InvalidOperationException ex)
             {
-                return BadRequest(ex.Message);
+                TempData["AlertMessage"] = ex.Message;
+                TempData["AlertType"] = "danger";
             }
 
-            return RedirectToAction();
+            return LocalRedirect(returnUrl);
         }
     }
 }

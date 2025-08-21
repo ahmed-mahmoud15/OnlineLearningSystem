@@ -94,5 +94,25 @@ namespace OnlineLearningSystem.Services
 
             return model;
         }
+
+        public async Task<IEnumerable<ShowInstructorInfoViewModel>> GetInstructorsInfoAsync()
+        {
+            IList<ShowInstructorInfoViewModel> model = new List<ShowInstructorInfoViewModel>();
+
+            foreach (var instructor in await unitOfWork.Instructors.GetAllWithCoursesFollowersAsync())
+            {
+                model.Add(new ShowInstructorInfoViewModel()
+                {
+                    Id = instructor.Id,
+                    Name = instructor.FirstName + " " + instructor.LastName,
+                    ProfilePhoto = instructor.ProfilePhotoPath,
+                    YearsOfExperience = instructor.YearsOfTeaching,
+                    NumberOfCourses = instructor.Courses.Count,
+                    NumberOfFollowers = instructor.FollowedBy.Count
+                });
+            }
+            
+            return model;
+        }
     }
 }

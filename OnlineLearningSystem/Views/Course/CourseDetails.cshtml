@@ -1,47 +1,67 @@
-﻿@model OnlineLearningSystem.ViewModels.CourseDetailsViewModel
+﻿@model CourseDetailsViewModel
 
 @{
-    ViewData["Title"] = "Course Details";
+	ViewData["Title"] = "Course Details";
 }
 @{
-    var isEnrolled = (bool)(ViewBag.IsEnrolled ?? false);
-    var isAuthenticated = User.Identity.IsAuthenticated;
-    var isStudent = User.IsInRole("Student");
+	var isEnrolled = (bool)(ViewBag.IsEnrolled ?? false);
+	var isLiked = (bool)(ViewBag.IsLiked ?? false);
+	var isAuthenticated = User.Identity.IsAuthenticated;
+	var isStudent = User.IsInRole("Student");
 }
 
 <div class="container mt-5">
-    @await Html.PartialAsync("_CourseHeaderInfo", Model)
+	@await Html.PartialAsync("_CourseHeaderInfo", Model)
 
-    @await Html.PartialAsync("_CourseLessons", Model.Lessons)
-    
-    <div class="mt-4 d-flex justify-content-between">
-        
-        <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary rounded-pill px-4 shadow-sm">
-            <i class="bi bi-arrow-left"></i> Back to Courses
-        </a>
-        @if (!isEnrolled)
-        {
-            @if (!isAuthenticated)
-            {
-                <!-- Anonymous user: redirect to login -->
-                <a class="btn btn-primary rounded-pill px-4 shadow-sm" asp-area="Identity" asp-page="/Account/Login">Login</a>
-            }
-            else if (isStudent)
-            {
-                <!-- Authenticated student: enroll directly -->
-                <a class="btn btn-primary rounded-pill px-4 shadow-sm"
-                   asp-action="Enroll" asp-controller="Enrollment"
-                   asp-route-studentId="@User.FindFirst("UserId")?.Value"
-                   asp-route-courseId="@Model.CourseId">
-                    Enroll
-                </a>
-            }
-        }
-        else
-        {
-            <button class="btn btn-primary rounded-pill px-4 shadow-sm" disabled>
-                Already Enrolled
-            </button>
-        }
-    </div>
+	@await Html.PartialAsync("_CourseLessons", Model.Lessons)
+
+	<div class="mt-4 d-flex justify-content-between">
+
+		<a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary rounded-pill px-4 shadow-sm">
+			<i class="bi bi-arrow-left"></i> Back to Courses
+		</a>
+		@if (!isAuthenticated)
+		{
+			<!-- Anonymous user: redirect to login -->
+			<a class="btn btn-primary rounded-pill px-4 shadow-sm" asp-area="Identity" asp-page="/Account/Login">Login</a>
+		}
+		else if (isStudent)
+		{
+			<!-- Authenticated student: enroll directly -->
+			@if (isEnrolled)
+			{
+				<button class="btn btn-primary rounded-pill px-4 shadow-sm" disabled>
+					Already Enrolled
+				</button>
+			}
+			else
+			{
+				<form asp-controller="Enrollment" asp-action="Enroll" method="post">
+					<input type="hidden" name="studentId" value="@User.FindFirst("UserId")?.Value" />
+					<input type="hidden" name="courseId" value="@Model.CourseId" />
+					<input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+					<button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">Enroll</button>
+				</form>
+			}
+
+			@if (isLiked)
+			{
+				<form asp-controller="Like" asp-action="Dislike" method="post">
+					<input type="hidden" name="studentId" value="@User.FindFirst("UserId")?.Value" />
+					<input type="hidden" name="courseId" value="@Model.CourseId" />
+					<input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+					<button type="submit" class="btn btn-danger rounded-pill px-4 shadow-sm">Dislike</button>
+				</form>
+			}
+			else
+			{
+				<form asp-controller="Like" asp-action="Like" method="post">
+					<input type="hidden" name="studentId" value="@User.FindFirst("UserId")?.Value" />
+					<input type="hidden" name="courseId" value="@Model.CourseId" />
+					<input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+					<button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">Like</button>
+				</form>
+			}
+		}
+	</div>
 </div>

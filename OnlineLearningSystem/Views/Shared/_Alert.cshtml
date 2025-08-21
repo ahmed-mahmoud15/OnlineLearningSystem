@@ -1,0 +1,12 @@
+﻿@{
+    var alertMessage = TempData["AlertMessage"] as string;
+    var alertType = TempData["AlertType"] as string ?? "info"; // default type
+}
+
+@if (!string.IsNullOrEmpty(alertMessage))
+{
+    <div class="alert alert-@alertType alert-dismissible fade show fixed-top m-3 shadow-lg rounded-3" role="alert">
+        @alertMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}

@@ -6,5 +6,7 @@ namespace OnlineLearningSystem.Repositories
     {
         public Task<Instructor> GetWithCoursesAsync(int instructorId);
         public Task<Instructor> GetWithFollowersAsync(int instructorId);
+
+        public Task<IEnumerable<Instructor>> GetAllWithCoursesFollowersAsync();
     }
 }
