@@ -1,0 +1,43 @@
+﻿@model OnlineLearningSystem.ViewModels.CourseDetailsViewModel
+
+<!-- Header -->
+<div class="text-center mb-4">
+    <h1 class="fw-bold text-primary display-5">@Model.CourseName</h1>
+    <p class="text-muted fs-5">@Model.CourseDescription</p>
+</div>
+
+<!-- Info Card -->
+<div class="card shadow-lg border-0 rounded-4 mb-4">
+    <div class="card-body p-4">
+        <div class="row g-4">
+            <div class="col-md-6">
+                <p>
+                    <i class="bi bi-person-circle text-primary"></i>
+                    <strong>Instructor:</strong> @Model.InstructorName
+                </p>
+                <p>
+                    <i class="bi bi-diagram-3-fill text-warning"></i>
+                    <strong>Category:</strong> @Model.CategoryName
+                </p>
+                <p>
+                    <i class="bi bi-currency-dollar text-success"></i>
+                    <strong>Price:</strong> $@Model.Price
+                </p>
+            </div>
+            <div class="col-md-6">
+                <p>
+                    <i class="bi bi-heart-fill text-danger"></i>
+                    <strong>Likes:</strong> @Model.CountLikes
+                </p>
+                <p>
+                    <i class="bi bi-people-fill text-info"></i>
+                    <strong>Enrolled Students:</strong> @Model.CountEnrolledStudents
+                </p>
+                <p>
+                    <i class="bi bi-journal-bookmark-fill text-success"></i>
+                    <strong>Lessons:</strong> @Model.CountLessons
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -19,9 +19,9 @@
                                 <span><i class="bi bi-journal-text"></i> @course.CountLessons Lessons</span>
                             </div>
 
-                            <a href="@Url.Action("Details", "Courses", new { id = course.Id })"
-                               class="btn btn-outline-primary btn-sm mt-auto">
-                                <i class="bi bi-eye"></i> View Course
+                            <a asp-action="CourseDetails" asp-controller="Course" asp-route-id="@course.Id"
+                               class="btn btn-success btn-lg px-4 shadow-sm">
+                                <i class="bi bi-plus-circle"></i> View Course
                             </a>
                         </div>
                     </div>

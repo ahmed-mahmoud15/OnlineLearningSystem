@@ -1,0 +1,30 @@
+﻿@model IEnumerable<OnlineLearningSystem.ViewModels.ShowLessonCourseDetailsViewModel>
+
+<div class="card shadow-sm border-0 rounded-4 mb-4">
+    <div class="card-header bg-secondary text-white">
+        <h5 class="mb-0">Lessons</h5>
+    </div>
+    <div class="card-body">
+        @if (Model == null || !Model.Any())
+        {
+            <div class="alert alert-info text-center mb-0">
+                No lessons available for this course.
+            </div>
+        }
+        else
+        {
+            <ul class="list-group list-group-flush">
+                @foreach (var lesson in Model)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="badge bg-secondary me-2">#@lesson.SequenceNumber</span>
+                            <strong>@lesson.LessonTitle</strong>
+                        </div>
+                        <span class="badge bg-info text-dark">@lesson.LessonType</span>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>

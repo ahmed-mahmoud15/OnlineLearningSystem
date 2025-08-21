@@ -13,6 +13,16 @@ namespace OnlineLearningSystem.Services
             this.unitOfWork = unitOfWork;
         }
 
+        public async Task<bool> IsStudentEnrolledInCourseAsync(int studentId, int courseId)
+        {
+            Student student = await CheckEntity.CheckAndGetStudentAsync(studentId, unitOfWork);
+            Course course = await CheckEntity.CheckAndGetCourseAsync(courseId, unitOfWork);
+
+            Enrollment checkPrevEnrollment = await unitOfWork.Enrollments.GetWithConditionAsync(e => e.StudentId == studentId && e.CourseId == courseId);
+
+            return checkPrevEnrollment != null;
+        }
+
         public async Task EnrollInCourse(int studentId, int courseId)
         {
             Student student = await CheckEntity.CheckAndGetStudentAsync(studentId, unitOfWork);

@@ -14,22 +14,6 @@ namespace OnlineLearningSystem.Services
             this.unitOfWork = unit;
         }
 
-        public async Task DislikeCourse(int studentId, int courseId)
-        {
-            Student student = await CheckEntity.CheckAndGetStudentAsync(studentId, unitOfWork);
-            Course course = await CheckEntity.CheckAndGetCourseAsync(courseId, unitOfWork);
-
-            Like oldLike = await unitOfWork.Likes.GetWithConditionAsync(e => e.StudentId == studentId && e.CourseId == courseId);
-
-            if (oldLike == null)
-            {
-                throw new InvalidOperationException("This student didn't like this course before");
-            }
-
-            await unitOfWork.Likes.DeleteAsync(oldLike);
-            await unitOfWork.CompleteAsync();
-        }
-
         public async Task EditStudentAsync(EditStudentViewModel model)
         {
             if(model == null) throw new ArgumentNullException("model is Null" );
@@ -52,28 +36,6 @@ namespace OnlineLearningSystem.Services
             student.Bio = model.Bio;
 
             unitOfWork.Students.Update(student);
-            await unitOfWork.CompleteAsync();
-        }
-
-        public async Task FollowInstructor(int studentId, int instructorId)
-        {
-            Student student = await CheckEntity.CheckAndGetStudentAsync(studentId, unitOfWork);
-            Instructor instructor = await CheckEntity.CheckAndGetInstructorAsync(instructorId, unitOfWork);
-
-            Follow oldFollow = await unitOfWork.Follows.GetWithConditionAsync(e => e.StudentId == studentId && e.InstructorId == instructorId);
-
-            if(oldFollow != null)
-            {
-                throw new InvalidOperationException("This student is already following this instructor");
-            }
-
-            Follow follow = new Follow() { 
-                FollowDate = DateTime.UtcNow,
-                InstructorId = instructorId,
-                StudentId = studentId
-            };
-
-            await unitOfWork.Follows.AddAsync(follow);
             await unitOfWork.CompleteAsync();
         }
 
@@ -104,69 +66,6 @@ namespace OnlineLearningSystem.Services
                 Courses = myCourses
             };
             return model;
-        }
-
-        public async Task LikeCourse(int studentId, int courseId)
-        {
-            Student student = await CheckEntity.CheckAndGetStudentAsync(studentId, unitOfWork);
-            Course course = await CheckEntity.CheckAndGetCourseAsync(courseId, unitOfWork);
-
-            Like oldLike = await unitOfWork.Likes.GetWithConditionAsync(e => e.StudentId == studentId && e.CourseId == courseId);
-
-            if (oldLike != null) {
-                throw new InvalidOperationException("This student liked this course before");
-            }
-
-            Like like = new Like() {
-                CourseId = courseId,
-                StudentId = studentId,
-                LikedDate = DateTime.UtcNow
-            };
-
-            await unitOfWork.Likes.AddAsync(like);
-            await unitOfWork.CompleteAsync();
-        }
-
-        public async Task MakePayment(MakePaymentViewModel model)
-        {
-            if (model == null) {
-                throw new ArgumentNullException("Model is null");
-            }
-
-            Student student = await CheckEntity.CheckAndGetStudentAsync(model.StudentId, unitOfWork);
-
-            if(model.Amount <= 0)
-            {
-                throw new ArgumentException("Amount can't be zero or less");
-            }
-
-            Payment payment = new Payment()
-            {
-                Amount = model.Amount,
-                StudentId = model.StudentId
-            };
-
-            student.Coins += model.Amount;
-
-            unitOfWork.Students.Update(student);
-            await unitOfWork.Payments.AddAsync(payment);
-            await unitOfWork.CompleteAsync();
-        }
-
-        public async Task UnfollowInstructor(int studentId, int instructorId)
-        {
-            Student student = await CheckEntity.CheckAndGetStudentAsync(studentId, unitOfWork);
-            Instructor instructor = await CheckEntity.CheckAndGetInstructorAsync(instructorId, unitOfWork);
-
-            Follow oldFollow = await unitOfWork.Follows.GetWithConditionAsync(e => e.StudentId == studentId && e.InstructorId == instructorId);
-
-            if (oldFollow == null)
-            {
-                throw new InvalidOperationException("This student is not following this instructor");
-            }
-
-            await unitOfWork.Follows.DeleteAsync(oldFollow);
-            await unitOfWork.CompleteAsync();
         }
 
         public async Task<EditStudentViewModel> GetStudentEditAsync(int studentId)

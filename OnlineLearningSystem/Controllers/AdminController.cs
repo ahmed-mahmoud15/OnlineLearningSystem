@@ -7,11 +7,9 @@ namespace OnlineLearningSystem.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        private readonly IAdminService adminService;
 
-        public AdminController(IAdminService adminService)
+        public AdminController()
         {
-            this.adminService = adminService;
         }
 
         public async Task<IActionResult> Dashboard()

@@ -1,0 +1,47 @@
+﻿@model OnlineLearningSystem.ViewModels.CourseDetailsViewModel
+
+@{
+    ViewData["Title"] = "Course Details";
+}
+@{
+    var isEnrolled = (bool)(ViewBag.IsEnrolled ?? false);
+    var isAuthenticated = User.Identity.IsAuthenticated;
+    var isStudent = User.IsInRole("Student");
+}
+
+<div class="container mt-5">
+    @await Html.PartialAsync("_CourseHeaderInfo", Model)
+
+    @await Html.PartialAsync("_CourseLessons", Model.Lessons)
+    
+    <div class="mt-4 d-flex justify-content-between">
+        
+        <a asp-action="Index" asp-controller="Home" class="btn btn-outline-secondary rounded-pill px-4 shadow-sm">
+            <i class="bi bi-arrow-left"></i> Back to Courses
+        </a>
+        @if (!isEnrolled)
+        {
+            @if (!isAuthenticated)
+            {
+                <!-- Anonymous user: redirect to login -->
+                <a class="btn btn-primary rounded-pill px-4 shadow-sm" asp-area="Identity" asp-page="/Account/Login">Login</a>
+            }
+            else if (isStudent)
+            {
+                <!-- Authenticated student: enroll directly -->
+                <a class="btn btn-primary rounded-pill px-4 shadow-sm"
+                   asp-action="Enroll" asp-controller="Enrollment"
+                   asp-route-studentId="@User.FindFirst("UserId")?.Value"
+                   asp-route-courseId="@Model.CourseId">
+                    Enroll
+                </a>
+            }
+        }
+        else
+        {
+            <button class="btn btn-primary rounded-pill px-4 shadow-sm" disabled>
+                Already Enrolled
+            </button>
+        }
+    </div>
+</div>

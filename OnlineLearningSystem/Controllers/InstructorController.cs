@@ -29,7 +29,7 @@ namespace OnlineLearningSystem.Controllers
             }
             catch (ArgumentNullException ex)
             {
-                return NotFound(ex.InnerException.Message);
+                return NotFound(ex.Message);
             }
 
             return View(model);
@@ -56,34 +56,7 @@ namespace OnlineLearningSystem.Controllers
             }
             catch (ArgumentNullException ex)
             {
-                return NotFound(ex.InnerException.Message);
-            }
-            return RedirectToAction("MyProfile");
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> AddCourse(int id)
-        {
-            int userId = int.Parse(User.FindFirst("UserId")?.Value);
-
-            if (id != userId)
-            {
-                return Unauthorized();
-            }
-            ViewBag.Categories = await categoryService.GetCategoriesAsync();
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> AddCourse(AddCourseViewModel model)
-        {
-            try
-            {
-                await courseService.AddCourseAsync(model);
-            }
-            catch (ArgumentNullException ex)
-            {
-                return NotFound(ex.InnerException.Message);
+                return NotFound(ex.Message);
             }
             return RedirectToAction("MyProfile");
         }

@@ -1,0 +1,39 @@
+﻿@if (User.IsInRole("Student"))
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-action="MyProfile" asp-controller="Student">My Profile</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-action="Index" asp-controller="Home">Discover Courses</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-action="Index" asp-controller="Home">Discover Instructors</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-action="Index" asp-controller="Home">My Courses</a>
+    </li>
+}
+else if (User.IsInRole("Instructor"))
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-action="MyProfile" asp-controller="Instructor">My Profile</a>
+    </li>
+}
+else if (User.IsInRole("Admin"))
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-action="Dashboard" asp-controller="Admin">Dashboard</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-action="Index" asp-controller="Home">Manage Students</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-action="Index" asp-controller="Home">Manage Instructors</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-action="Index" asp-controller="Home">Manage Courses</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-action="Index" asp-controller="Home">Manage Categories</a>
+    </li>
+}

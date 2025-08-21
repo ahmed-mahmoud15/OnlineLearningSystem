@@ -2,11 +2,11 @@
 
 namespace OnlineLearningSystem.Services
 {
-    public class AdminService : IAdminService
+    public class LessonService : ILessonService
     {
         private readonly IUnitOfWork unitOfWork;
 
-        public AdminService(IUnitOfWork unitOfWork)
+        public LessonService(IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
         }

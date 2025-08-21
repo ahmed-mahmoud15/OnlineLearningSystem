@@ -9,10 +9,14 @@ namespace OnlineLearningSystem.Middlewares
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<IInstructorService, InstructorService>();
-            services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<ICourseService, CourseService>();
             services.AddScoped<IEnrollmentService, EnrollmentService>();
+            services.AddScoped<IFollowService, FollowService>();
+            services.AddScoped<ILikeService, LikeService>();
+            services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<ILessonService, LessonService>();
+
             return services;
         }
     }

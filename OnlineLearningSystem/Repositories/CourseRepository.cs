@@ -10,6 +10,11 @@ namespace OnlineLearningSystem.Repositories
         {
         }
 
+        public async Task<IEnumerable<Course>> GetAllWithInstructorCategoryLikesAsync()
+        {
+            return await context.Courses.Include(e => e.Category).Include(e => e.Instructor).Include(e => e.LikedBy).Include(e => e.Enrollments).ToListAsync();
+        }
+
         public async Task<IEnumerable<Course>> GetByCategoryIdAsync(int categoryId)
         {
             return await context.Courses.Where(e => e.CategoryId == categoryId).ToListAsync();
@@ -18,6 +23,11 @@ namespace OnlineLearningSystem.Repositories
         public async Task<IEnumerable<Course>> GetByInstructorIdAsync(int instructorId)
         {
             return await context.Courses.Where(e => e.InstructorId == instructorId).ToListAsync();
+        }
+
+        public async Task<Course> GetWithInstructorCategoryLikesAsync(int courseId)
+        {
+            return await context.Courses.Include(e => e.Category).Include(e => e.Instructor).Include(e => e.LikedBy).Include(e => e.Enrollments).FirstOrDefaultAsync(e => e.Id == courseId);
         }
 
         public async Task<Course> GetWithLessonsAsync(int courseId)

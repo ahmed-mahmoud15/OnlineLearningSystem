@@ -1,7 +1,7 @@
 ﻿using OnlineLearningSystem.Models;
 using OnlineLearningSystem.Repositories;
 using OnlineLearningSystem.ViewModels;
-
+using OnlineLearningSystem.Common_Functionalities;
 namespace OnlineLearningSystem.Services
 {
     public class CourseService : ICourseService
@@ -19,7 +19,7 @@ namespace OnlineLearningSystem.Services
                 throw new ArgumentNullException("model is null");
             }
 
-            Instructor instructor = await CheckAndGetInstructorAsync(model.InstructorId);
+            Instructor instructor = await CheckEntity.CheckAndGetInstructorAsync(model.InstructorId, unitOfWork);
 
             Course course = new Course()
             {
@@ -35,13 +35,48 @@ namespace OnlineLearningSystem.Services
             await unitOfWork.CompleteAsync();
         }
 
-        private async Task<Instructor> CheckAndGetInstructorAsync(int instructorId)
+        public async Task<IEnumerable<ShowCoursesInHomeViewModel>> GetAllCoursesAsync()
         {
-            Instructor instructor = await unitOfWork.Instructors.GetByIdAsync(instructorId);
+            var courses = await unitOfWork.Courses.GetAllWithInstructorCategoryLikesAsync();
 
-            if (instructor == null) { throw new ArgumentNullException($"There is no Instructor with Id = {instructorId}"); }
+            IList<ShowCoursesInHomeViewModel> model = courses.Select(e => new ShowCoursesInHomeViewModel() {
+                CourseId = e.Id,
+                CategoryName = e.Category.Name,
+                CourseName = e.Name,
+                InstructorId = e.Instructor.Id,
+                InstructorName = e.Instructor.FirstName + " " + e.Instructor.LastName,
+                NumberOfLessons = e.Lessons.Count,
+                NumberOfLiks = e.LikedBy.Count
+            }).ToList();
 
-            return instructor;
+            return model;
+        }
+
+        public async Task<CourseDetailsViewModel> GetCourseDetailsAsync(int courseId)
+        {
+            Course course = await unitOfWork.Courses.GetWithInstructorCategoryLikesAsync(courseId);
+
+            CourseDetailsViewModel model = new CourseDetailsViewModel()
+            {
+                CategoryName = course.Category.Name,
+                CourseName = course.Name,
+                CourseId = courseId,
+                Price = course.Price,
+                CountEnrolledStudents = course.Enrollments.Count,
+                CountLessons = course.Lessons.Count,
+                CountLikes = course.LikedBy.Count,
+                CourseDescription = course.Description,
+                InstructorId = course.Instructor.Id,
+                InstructorName = course.Instructor.FirstName + " " + course.Instructor.LastName,
+                Lessons = course.Lessons.Select(e => new ShowLessonCourseDetailsViewModel()
+                {
+                    LessonTitle = e.Title,
+                    LessonType = e.Type.ToString(),
+                    SequenceNumber = e.SequenceNumber
+                })
+            };
+
+            return model;
         }
     }
 }

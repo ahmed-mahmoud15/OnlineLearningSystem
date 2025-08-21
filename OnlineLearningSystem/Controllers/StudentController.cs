@@ -9,10 +9,12 @@ namespace OnlineLearningSystem.Controllers
     public class StudentController : Controller
     {
         private readonly IStudentService studentService;
+        private readonly IEnrollmentService enrollmentService;
 
-        public StudentController(IStudentService studentService)
+        public StudentController(IStudentService studentService, IEnrollmentService enrollmentService)
         {
             this.studentService = studentService;
+            this.enrollmentService = enrollmentService;
         }
 
         public async Task<IActionResult> MyProfile()
@@ -24,7 +26,7 @@ namespace OnlineLearningSystem.Controllers
                 model = await studentService.GetStudentProfileAsync(id);
             }catch(ArgumentNullException ex)
             {
-                return NotFound(ex.InnerException.Message);
+                return NotFound(ex.Message);
             }
             
             return View(model);
@@ -50,11 +52,11 @@ namespace OnlineLearningSystem.Controllers
                 await studentService.EditStudentAsync(model);
             }catch(ArgumentNullException ex)
             {
-                return NotFound(ex.InnerException.Message);
+                return NotFound(ex.Message);
             }
             return RedirectToAction("MyProfile");
         }
-
-        //public IActionResult Profile(int id) { }
     }
+
+    
 }
