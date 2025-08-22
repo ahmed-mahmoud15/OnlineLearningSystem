@@ -1,8 +1,9 @@
-﻿using OnlineLearningSystem.Models;
-using OnlineLearningSystem.Repositories;
-using OnlineLearningSystem.ViewModels;
+﻿using Microsoft.AspNetCore.Cors.Infrastructure;
 using OnlineLearningSystem.Common_Functionalities;
 using OnlineLearningSystem.DTOs;
+using OnlineLearningSystem.Models;
+using OnlineLearningSystem.Repositories;
+using OnlineLearningSystem.ViewModels;
 namespace OnlineLearningSystem.Services
 {
     public class CourseService : ICourseService
@@ -113,5 +114,61 @@ namespace OnlineLearningSystem.Services
 
             return model;
         }
+
+        public async Task<PaginateResultDTO<ShowCoursesInfoViewModel>> SearchCoursesCoursesPaginationAsync(string searchTerm, int? categoryId)
+        {
+            // Get all courses with includes
+            var courses = await unitOfWork.Courses.GetAllPaginationAsync(
+                pageNumber: 1,
+                pageSize: 20,
+                c => c.Instructor,
+                c => c.Enrollments,
+                c => c.Category,
+                c => c.LikedBy,
+                c => c.Lessons
+            );
+
+            // Start with IQueryable for filtering
+            var query = courses.Items.AsQueryable();
+
+            // Filter by search term (case-insensitive)
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                string lowerSearch = searchTerm.Trim().ToLower();
+                query = query.Where(c => c.Name.ToLower().Contains(lowerSearch));
+            }
+
+            // Filter by category if provided
+            if (categoryId.HasValue)
+            {
+                query = query.Where(c => c.Category.Id == categoryId.Value);
+            }
+
+            // Project to ViewModel
+            var items = query.Select(item => new ShowCoursesInfoViewModel
+            {
+                CategoryId = item.Category.Id,
+                CategoryName = item.Category.Name,
+                CourseId = item.Id,
+                CourseName = item.Name,
+                CreatedDate = item.CreationDate,
+                InstructorId = item.Instructor.Id,
+                InstructorName = item.Instructor.FirstName + " " + item.Instructor.LastName,
+                NumberOfLessons = item.Lessons.Count,
+                NumberOfLikes = item.LikedBy.Count,
+                Price = item.Price
+            }).ToList();
+
+            // Return as PaginateResultDTO
+            return new PaginateResultDTO<ShowCoursesInfoViewModel>
+            {
+                Items = items,
+                PageNumber = 1,
+                PageSize = items.Count == 0 ? 1 : items.Count,
+                TotalCount = items.Count
+            };
+        }
+
+
     }
 }

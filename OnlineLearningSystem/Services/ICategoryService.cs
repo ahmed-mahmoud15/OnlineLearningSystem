@@ -10,5 +10,7 @@ namespace OnlineLearningSystem.Services
         public Task CreateCategoryAsync(CreateCategoryViewModel model);
 
         public Task<string> DeleteCategoryAsync(int categoryId);
+
+        public Task<IEnumerable<Category>> GetAllCategoriesAsync();
     }
 }

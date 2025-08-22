@@ -1,110 +1,76 @@
 ﻿@model OnlineLearningSystem.DTOs.PaginateResultDTO<OnlineLearningSystem.ViewModels.ShowCoursesInfoViewModel>
 
 @{
-    ViewData["Title"] = "Courses";
-    var totalPages = (int)Math.Ceiling((decimal)Model.TotalCount / Model.PageSize);
+	ViewData["Title"] = "Courses";
 }
 
 <div class="container mt-5">
-    <!-- Page Title -->
-    <div class="text-center mb-4">
-        <h1 class="fw-bold text-primary display-6">Explore Our Courses</h1>
-        <p class="text-muted">Discover courses, instructors, and categories tailored for you</p>
-    </div>
+	<!-- Page Title -->
+	<div class="text-center mb-4">
+		<h1 class="fw-bold text-primary display-6">Explore Our Courses</h1>
+		<p class="text-muted">Discover courses, instructors, and categories tailored for you</p>
+	</div>
 
-    @if (Model.Items == null || !Model.Items.Any())
-    {
-        <div class="alert alert-info">No courses found.</div>
-    }
-    else
-    {
-        <!-- Courses Grid -->
-        <div class="row g-3">
-            @foreach (var item in Model.Items)
-            {
-                <div class="col-md-6 col-lg-4">
-                    <div class="card h-100 shadow-sm border-0 rounded-3 overflow-hidden course-card">
-                        <!-- Course Header -->
-                        <div class="bg-gradient p-3 text-white d-flex flex-column"
-                             style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <h6 class="fw-bold mb-0 text-truncate text-primary">@item.CourseName</h6>
-                                <span class="badge bg-dark">@item.CategoryName</span>
-                            </div>
-                        </div>
+	<!-- Search & Category Filter -->
+	<div class="row mb-4">
+		<div class="col-md-6 mb-2 mb-md-0">
+			<input type="text" id="searchInput" class="form-control" placeholder="Search courses by name..." />
+		</div>
+		<div class="col-md-6">
+			<select id="categoryFilter" class="form-select">
+				<option value="">All Categories</option>
+				@foreach (var category in ViewBag.Categories as List<Category>)
+				{
+					<option value="@category.Id">@category.Name</option>
+				}
+			</select>
+		</div>
+	</div>
 
-                        <!-- Course Body -->
-                        <div class="card-body p-3">
-                            <p class="mb-1 small">
-                                <i class="bi bi-person-circle text-primary"></i>
-                                <strong>@item.InstructorName</strong>
-                            </p>
-                            <p class="mb-1 small">
-                                <i class="bi bi-journal-bookmark-fill text-success"></i>
-                                Lessons: <strong>@item.NumberOfLessons</strong>
-                            </p>
-                            <p class="mb-1 small">
-                                <i class="bi bi-heart-fill text-danger"></i>
-                                Likes: <strong>@item.NumberOfLikes</strong>
-                            </p>
-                            <p class="mb-1 small">
-                                <i class="bi bi-cash-coin"></i>
-                                Price: <strong>@item.Price</strong> Coins
-                            </p>
-                            <p class="mb-0 small text-muted">
-                                <i class="bi bi-calendar3"></i>
-                                Created: @item.CreatedDate.ToString("dd MMM yyyy")
-                            </p>
-                        </div>
-
-                        <!-- Course Footer -->
-                        <div class="card-footer bg-light border-0 d-flex justify-content-between p-2">
-                            <a asp-action="Profile" asp-controller="Instructor" asp-route-id="@item.InstructorId"
-                               class="btn btn-outline-primary btn-sm w-50 me-2 rounded-pill shadow-sm">
-                                <i class="bi bi-person-badge"></i> Instructor
-                            </a>
-                            <a asp-action="CourseDetails" asp-controller="Course" asp-route-id="@item.CourseId"
-                               class="btn btn-primary btn-sm w-50 rounded-pill shadow-sm">
-                                <i class="bi bi-eye"></i> Details
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            }
-        </div>
-
-        <!-- Pagination -->
-        <nav class="mt-4">
-            <ul class="pagination justify-content-center">
-                <li class="page-item @(Model.PageNumber <= 1 ? "disabled" : "")">
-                    <a class="page-link" asp-action="Index" asp-route-page="@(Model.PageNumber - 1)" asp-route-count="@Model.PageSize">Previous</a>
-                </li>
-
-                @for (int i = 1; i <= totalPages; i++)
-                {
-                    <li class="page-item @(i == Model.PageNumber ? "active" : "")">
-                        <a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-count="@Model.PageSize">@i</a>
-                    </li>
-                }
-
-                <li class="page-item @(Model.PageNumber >= totalPages ? "disabled" : "")">
-                    <a class="page-link" asp-action="Index" asp-route-page="@(Model.PageNumber + 1)" asp-route-count="@Model.PageSize">Next</a>
-                </li>
-            </ul>
-        </nav>
-    }
+	<!-- Courses Grid Container -->
+	<div id="coursesContainer">
+		@await Html.PartialAsync("_CoursesGridPartial", Model)
+	</div>
 </div>
 
 @section Styles {
-    <style>
-        .course-card {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            font-size: 0.9rem;
-        }
+	<style>
+		.course-card {
+			transition: transform 0.2s ease, box-shadow 0.2s ease;
+			font-size: 0.9rem;
+		}
 
-            .course-card:hover {
-                transform: translateY(-4px);
-                box-shadow: 0 0.75rem 1.5rem rgba(0,0,0,0.1);
-            }
-    </style>
+			.course-card:hover {
+				transform: translateY(-4px);
+				box-shadow: 0 0.75rem 1.5rem rgba(0,0,0,0.1);
+			}
+	</style>
 }
+
+@section Scripts {
+	<script>
+		$(document).ready(function () {
+			function fetchCourses() {
+				var searchTerm = $("#searchInput").val();
+				var categoryId = $("#categoryFilter").val(); // use the category ID now
+
+				$.ajax({
+					url: '@Url.Action("SearchCourses", "Course")', // controller action
+					type: 'GET',
+					data: { searchTerm: searchTerm, categoryId: categoryId },
+					success: function (result) {
+						$("#coursesContainer").html(result); // update the partial
+					},
+					error: function () {
+						alert("Error retrieving courses.");
+					}
+				});
+			}
+
+			// Trigger fetch on typing or changing category
+			$("#searchInput").on("keyup", fetchCourses);
+			$("#categoryFilter").on("change", fetchCourses);
+		});
+	</script>
+}
+

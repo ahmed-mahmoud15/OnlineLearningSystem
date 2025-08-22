@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OnlineLearningSystem.DTOs;
 using OnlineLearningSystem.Services;
 using OnlineLearningSystem.ViewModels;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace OnlineLearningSystem.Controllers
 {
@@ -25,8 +27,17 @@ namespace OnlineLearningSystem.Controllers
 
         public async Task<IActionResult> Index(int count = 10, int page = 1)
         {
+            ViewBag.Categories = await categoryService.GetAllCategoriesAsync();
             return View(await courseService.GetAllCoursesPaginationAsync(count, page));
         }
+
+        public async Task<IActionResult> SearchCourses(string searchTerm, int? categoryId)
+        {
+            var model = await courseService.SearchCoursesCoursesPaginationAsync(searchTerm, categoryId);
+
+            return PartialView("_CoursesGridPartial", model);
+        }
+
 
         [HttpGet]
         [Authorize(Roles = "Instructor")]

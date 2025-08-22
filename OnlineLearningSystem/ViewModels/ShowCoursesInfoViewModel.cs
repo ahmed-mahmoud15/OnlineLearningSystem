@@ -6,6 +6,7 @@
         public string CourseName { get; set; }
 
         public string CategoryName { get; set; }
+        public int CategoryId { get; set; }
 
         public string InstructorName { get; set; }
 

@@ -40,6 +40,11 @@ namespace OnlineLearningSystem.Services
             return category.Name;
         }
 
+        public async Task<IEnumerable<Category>> GetAllCategoriesAsync()
+        {
+            return await unitOfWork.Categories.GetAllAsync();
+        }
+
         public async Task<IEnumerable<Category>> GetCategoriesWithCoursesAsync()
         {
             return await unitOfWork.Categories.GetAllCategoryWithCourse();
