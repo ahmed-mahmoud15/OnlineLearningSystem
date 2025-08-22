@@ -117,7 +117,6 @@ namespace OnlineLearningSystem.Services
 
         public async Task<PaginateResultDTO<ShowCoursesInfoViewModel>> SearchCoursesCoursesPaginationAsync(string searchTerm, int? categoryId)
         {
-            // Get all courses with includes
             var courses = await unitOfWork.Courses.GetAllPaginationAsync(
                 pageNumber: 1,
                 pageSize: 20,
@@ -128,23 +127,19 @@ namespace OnlineLearningSystem.Services
                 c => c.Lessons
             );
 
-            // Start with IQueryable for filtering
             var query = courses.Items.AsQueryable();
 
-            // Filter by search term (case-insensitive)
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 string lowerSearch = searchTerm.Trim().ToLower();
                 query = query.Where(c => c.Name.ToLower().Contains(lowerSearch));
             }
 
-            // Filter by category if provided
             if (categoryId.HasValue)
             {
                 query = query.Where(c => c.Category.Id == categoryId.Value);
             }
 
-            // Project to ViewModel
             var items = query.Select(item => new ShowCoursesInfoViewModel
             {
                 CategoryId = item.Category.Id,
@@ -159,7 +154,6 @@ namespace OnlineLearningSystem.Services
                 Price = item.Price
             }).ToList();
 
-            // Return as PaginateResultDTO
             return new PaginateResultDTO<ShowCoursesInfoViewModel>
             {
                 Items = items,
