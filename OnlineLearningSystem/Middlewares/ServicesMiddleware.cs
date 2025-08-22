@@ -16,6 +16,7 @@ namespace OnlineLearningSystem.Middlewares
             services.AddScoped<ILikeService, LikeService>();
             services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<ILessonService, LessonService>();
+            services.AddScoped<IAdminService, AdminService>();
 
             return services;
         }

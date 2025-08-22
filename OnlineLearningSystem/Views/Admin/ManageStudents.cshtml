@@ -1,0 +1,106 @@
+﻿@model OnlineLearningSystem.ViewModels.ManageStudentViewModel
+
+@{
+    ViewData["Title"] = "Manage Students";
+}
+
+<h1 class="mb-4">Manage Students</h1>
+
+<div class="row">
+    @if (Model.Students != null && Model.Students.Any())
+    {
+        foreach (var student in Model.Students)
+        {
+            <div class="col-12 mb-3">
+                <div class="card shadow-sm w-100">
+                    <div class="row g-0 align-items-center">
+                        <!-- Student Photo -->
+                        <div class="col-md-2 text-center p-3">
+                            <img src="@student.PhotoPath" alt="@student.StudentName" class="img-fluid rounded-circle" style="width:100px; height:100px; object-fit:cover;" />
+                        </div>
+
+                        <!-- Student Info -->
+                        <div class="col-md-7 p-3">
+                            <h5 class="card-title mb-1">@student.StudentName</h5>
+                            <p class="mb-1 text-muted">@student.StudentEmail</p>
+                            <p class="mb-1"><strong>Courses Enrolled:</strong> @student.NumberOfCoursesEnrolled</p>
+                            <p class="mb-0"><strong>Coins:</strong> @student.Coins</p>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="col-md-3 text-end p-3">
+                            <!-- Ban Form -->
+                            <form asp-action="BanUser" asp-controller="Admin" method="post" class="mb-2">
+                                <input type="hidden" name="studentId" value="@student.StudentId" />
+                                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                <button type="submit" class="btn btn-danger w-100">Ban</button>
+                            </form>
+
+                            <!-- Show Payment Toggle Button -->
+                            <button id="btn-payment-@student.StudentId" type="button" class="btn btn-primary w-100 mb-2" onclick="showPaymentForm('@student.StudentId')">
+                                Make Payment
+                            </button>
+
+                            <!-- Payment Form (hidden with animation) -->
+                            <form id="payment-form-@student.StudentId" asp-action="MakePayment" asp-controller="Admin" method="post" class="payment-form">
+                                <input type="hidden" name="StudentId" value="@student.StudentId" />
+                                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                <div class="input-group">
+                                    <input type="number" name="Amount" class="form-control" placeholder="Enter amount" required />
+                                    <button type="submit" class="btn btn-success">Pay</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-12">
+            <div class="alert alert-info">No students found.</div>
+        </div>
+    }
+</div>
+@section Styles{
+    <style>
+        /* Initially hidden */
+        .payment-form {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+            /* When active */
+            .payment-form.show {
+                max-height: 200px; /* enough to fit input group */
+                opacity: 1;
+                margin-top: 10px;
+            }
+
+        /* Smooth hide for button */
+        .fade-out {
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+    </style>
+}
+
+
+@section Scripts {
+    <script>
+        function showPaymentForm(studentId) {
+            var btn = document.getElementById("btn-payment-" + studentId);
+            var form = document.getElementById("payment-form-" + studentId);
+
+            // Fade out the button
+            btn.classList.add("fade-out");
+            setTimeout(function () {
+                btn.style.display = "none"; // hide completely after fade
+                form.classList.add("show"); // reveal form with transition
+            }, 400); // match transition time
+        }
+    </script>
+}

@@ -25,6 +25,11 @@ namespace OnlineLearningSystem.Repositories
             return await context.Courses.Where(e => e.InstructorId == instructorId).ToListAsync();
         }
 
+        public async Task<int> GetTotalNumberOfCoursesAsync()
+        {
+            return await context.Courses.CountAsync();
+        }
+
         public async Task<Course> GetWithInstructorCategoryLikesAsync(int courseId)
         {
             return await context.Courses.Include(e => e.Category).Include(e => e.Instructor).Include(e => e.LikedBy).Include(e => e.Enrollments).FirstOrDefaultAsync(e => e.Id == courseId);

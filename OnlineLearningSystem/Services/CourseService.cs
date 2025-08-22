@@ -35,6 +35,11 @@ namespace OnlineLearningSystem.Services
             await unitOfWork.CompleteAsync();
         }
 
+        public async Task<int> CountCourses()
+        {
+            return await unitOfWork.Courses.GetTotalNumberOfCoursesAsync();
+        }
+
         public async Task<IEnumerable<ShowCoursesInHomeViewModel>> GetAllCoursesAsync()
         {
             var courses = await unitOfWork.Courses.GetAllWithInstructorCategoryLikesAsync();
@@ -46,7 +51,8 @@ namespace OnlineLearningSystem.Services
                 InstructorId = e.Instructor.Id,
                 InstructorName = e.Instructor.FirstName + " " + e.Instructor.LastName,
                 NumberOfLessons = e.Lessons.Count,
-                NumberOfLiks = e.LikedBy.Count
+                NumberOfLikes = e.LikedBy.Count,
+                CreatedDate = e.CreationDate
             }).ToList();
 
             return model;

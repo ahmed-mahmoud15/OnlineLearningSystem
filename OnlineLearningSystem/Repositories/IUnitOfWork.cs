@@ -13,7 +13,7 @@ namespace OnlineLearningSystem.Repositories
 
         public IRepository<Lesson> Lessons { get; }
 
-        public IRepository<Category> Categories { get; }
+        public ICategoryRepository Categories { get; }
 
         public IRepository<Like> Likes { get; }
 

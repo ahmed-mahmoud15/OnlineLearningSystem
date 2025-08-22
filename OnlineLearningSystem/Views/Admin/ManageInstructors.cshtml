@@ -1,0 +1,165 @@
+﻿@model OnlineLearningSystem.ViewModels.ManageInstructorViewModel
+
+@{
+    ViewData["Title"] = "Manage Instructors";
+}
+
+<h1 class="mb-4">Manage Instructors</h1>
+
+<!-- Button to Show Create Form -->
+<div class="mb-3">
+    <button id="btn-show-create" type="button" class="btn btn-primary">+ Add Instructor</button>
+</div>
+
+<!-- Create Instructor Form (Hidden initially with transition) -->
+<div id="create-instructor-card" class="card shadow-sm mb-4 create-form">
+    <div class="card-body">
+        <h4 class="card-title mb-3">Add New Instructor</h4>
+        <form asp-action="CreateInstructor" asp-controller="Admin" method="post" enctype="multipart/form-data" class="row g-3">
+            <div class="col-md-6">
+                <input asp-for="CreateInstructor.FirstName" class="form-control" placeholder="First Name" />
+                <span asp-validation-for="CreateInstructor.FirstName" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <input asp-for="CreateInstructor.LastName" class="form-control" placeholder="Last Name" />
+                <span asp-validation-for="CreateInstructor.LastName" class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <input asp-for="CreateInstructor.Email" class="form-control" placeholder="Email" />
+                <span asp-validation-for="CreateInstructor.Email" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <input asp-for="CreateInstructor.Password" class="form-control" placeholder="Password" type="password" />
+                <span asp-validation-for="CreateInstructor.Password" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <input asp-for="CreateInstructor.ConfirmPassword" class="form-control" placeholder="Confirm Password" type="password" />
+                <span asp-validation-for="CreateInstructor.ConfirmPassword" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <input asp-for="CreateInstructor.BirthDate" class="form-control" type="date" />
+                <span asp-validation-for="CreateInstructor.BirthDate" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <input asp-for="CreateInstructor.LinkedInAccount" class="form-control" placeholder="LinkedIn Profile" />
+                <span asp-validation-for="CreateInstructor.LinkedInAccount" class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <textarea asp-for="CreateInstructor.Bio" class="form-control" placeholder="Bio"></textarea>
+                <span asp-validation-for="CreateInstructor.Bio" class="text-danger"></span>
+            </div>
+            
+            <div class="col-12">
+                <textarea asp-for="CreateInstructor.Experience" class="form-control" placeholder="Experience"></textarea>
+                <span asp-validation-for="CreateInstructor.Experience" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-12">
+                <label asp-for="CreateInstructor.ProfilePhotoPath" class="form-label"></label>
+                <input asp-for="CreateInstructor.ProfilePhotoPath" type="file" class="form-control" />
+                <span asp-validation-for="CreateInstructor.ProfilePhotoPath" class="text-danger"></span>
+            </div>
+            <div class="col-12">
+                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                <button type="submit" class="btn btn-primary w-100">Add Instructor</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- List of Instructors -->
+<div class="row">
+    @if (Model.Instructors != null && Model.Instructors.Any())
+    {
+        foreach (var instructor in Model.Instructors)
+        {
+            <div class="col-12 mb-3">
+                <div class="card shadow-sm w-100">
+                    <div class="row g-0 align-items-center">
+                        <!-- Instructor Photo -->
+                        <div class="col-md-2 text-center p-3">
+                            <img src="@instructor.PhotoPath"
+                                 alt="@instructor.InstructorName"
+                                 class="img-fluid rounded-circle"
+                                 style="width:100px; height:100px; object-fit:cover;" />
+                        </div>
+
+                        <!-- Instructor Info -->
+                        <div class="col-md-7 p-3">
+                            <h5 class="card-title mb-1">@instructor.InstructorName</h5>
+                            <p class="mb-1 text-muted">
+                                <strong>Email:</strong> @instructor.InstructorEmail
+                            </p>
+                            <p class="mb-1 text-muted">
+                                <strong>Courses:</strong> @instructor.NumberOfCourses
+                            </p>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="col-md-3 text-end p-3">
+                            <!-- Ban Form -->
+                            <form asp-action="BanUser" asp-controller="Admin" method="post">
+                                <input type="hidden" name="instructorId" value="@instructor.InstructorId" />
+                                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+
+                                <button type="submit"
+                                        class="btn btn-danger w-100"
+                                        onclick="return confirm('Are you sure you want to ban @instructor.InstructorName?');">
+                                    Ban
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-12">
+            <div class="alert alert-info">No instructors found.</div>
+        </div>
+    }
+</div>
+
+
+@section Styles {
+    <style>
+        /* Hide form initially */
+        .create-form {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+            .create-form.show {
+                max-height: 2000px; /* enough to fit all fields */
+                opacity: 1;
+                margin-top: 10px;
+            }
+
+        /* Fade out for button */
+        .fade-out {
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+    </style>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.getElementById("btn-show-create").addEventListener("click", function () {
+            var btn = this;
+            var card = document.getElementById("create-instructor-card");
+
+            btn.classList.add("fade-out");
+            setTimeout(function () {
+                btn.style.display = "none";
+                card.classList.add("show");
+            }, 400);
+        });
+    </script>
+}

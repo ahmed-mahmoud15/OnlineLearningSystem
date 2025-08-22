@@ -13,6 +13,8 @@
 
         public int NumberOfLessons { get; set; }
 
-        public int NumberOfLiks { get; set; }
+        public int NumberOfLikes { get; set; }
+
+        public DateTime CreatedDate { get; set; }
     }
 }

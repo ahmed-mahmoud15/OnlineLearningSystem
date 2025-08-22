@@ -33,7 +33,7 @@ namespace OnlineLearningSystem.Controllers
             {
                 return Unauthorized();
             }
-            ViewBag.Categories = await categoryService.GetCategoriesAsync();
+            ViewBag.Categories = await categoryService.GetCategoriesWithCoursesAsync();
             return View();
         }
 

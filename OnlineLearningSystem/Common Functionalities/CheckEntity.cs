@@ -15,6 +15,15 @@ namespace OnlineLearningSystem.Common_Functionalities
             return student;
         }
 
+        public static async Task<Category> CheckAndGetCategoryAsync(int categoryId, IUnitOfWork unitOfWork)
+        {
+            Category category = await unitOfWork.Categories.GetCategoryWithCourse(categoryId);
+
+            if (category == null) { throw new ArgumentNullException($"There is no Category with Id = {categoryId}"); }
+
+            return category;
+        }
+
         public static async Task<Course> CheckAndGetCourseAsync(int courseId, IUnitOfWork unitOfWork)
         {
             Course course = await unitOfWork.Courses.GetByIdAsync(courseId);

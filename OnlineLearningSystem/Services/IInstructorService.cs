@@ -1,4 +1,5 @@
-﻿using OnlineLearningSystem.ViewModels;
+﻿using OnlineLearningSystem.Models;
+using OnlineLearningSystem.ViewModels;
 
 namespace OnlineLearningSystem.Services
 {
@@ -8,5 +9,8 @@ namespace OnlineLearningSystem.Services
         public Task<InstructorProfileViewModel> GetInstructorProfileAsync(int id);
         public Task<IEnumerable<ShowInstructorInfoViewModel>> GetInstructorsInfoAsync();
         public Task<EditInstructorViewModel> GetInstructorEditAsync(int instructorId);
+        public Task<IEnumerable<Instructor>> GetAllInstructorsWithIdentityCourses();
+
+        public Task<int> CountInstructors();
     }
 }

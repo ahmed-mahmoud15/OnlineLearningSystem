@@ -14,5 +14,7 @@ namespace OnlineLearningSystem.Repositories
 
         public Task<IEnumerable<Course>> GetAllWithInstructorCategoryLikesAsync();
         public Task<Course> GetWithInstructorCategoryLikesAsync(int courseId);
+
+        public Task<int> GetTotalNumberOfCoursesAsync();
     }
 }

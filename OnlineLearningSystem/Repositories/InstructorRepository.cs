@@ -16,6 +16,16 @@ namespace OnlineLearningSystem.Repositories
             return result ?? throw new InvalidOperationException();
         }
 
+        public async Task<IEnumerable<Instructor>> GetAllWithIdentityCoursesAsync()
+        {
+            return await context.Instructors.Include(e => e.IdentityUser).Include(e => e.Courses).ToListAsync();
+        }
+
+        public async Task<int> GetTotalNumberOfInstructorsAsync()
+        {
+            return await context.Instructors.CountAsync();
+        }
+
         public async Task<Instructor> GetWithCoursesAsync(int instructorId)
         {
             var result = await context.Instructors.Include(e => e.Courses).ThenInclude(e => e.Enrollments).FirstOrDefaultAsync(e => e.Id == instructorId);

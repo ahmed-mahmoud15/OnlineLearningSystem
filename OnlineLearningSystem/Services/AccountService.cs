@@ -9,13 +9,11 @@ namespace OnlineLearningSystem.Services
 {
     public class AccountService : IAccountService
     {
-        private readonly IStudentService studentService;
         private readonly IUnitOfWork unitOfWork;
         private readonly UserManager<IdentityUser> userManager;
 
-        public AccountService(IStudentService studentService, IUnitOfWork unit, UserManager<IdentityUser> userManager)
+        public AccountService(IUnitOfWork unit, UserManager<IdentityUser> userManager)
         {
-            this.studentService = studentService;
             this.unitOfWork = unit;
             this.userManager = userManager;
         }

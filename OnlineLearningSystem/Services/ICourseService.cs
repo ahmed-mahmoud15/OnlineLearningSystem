@@ -8,5 +8,7 @@ namespace OnlineLearningSystem.Services
         //public Task GetAllCoursesByCategoryAsync(int categoryId);
         public Task<IEnumerable<ShowCoursesInHomeViewModel>> GetAllCoursesAsync();
         public Task<CourseDetailsViewModel> GetCourseDetailsAsync(int courseId);
+
+        public Task<int> CountCourses();
     }
 }

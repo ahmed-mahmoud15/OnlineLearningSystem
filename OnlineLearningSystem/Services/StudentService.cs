@@ -86,5 +86,15 @@ namespace OnlineLearningSystem.Services
 
             return model;            
         }
+
+        public async Task<IEnumerable<Student>> GetAllStudentsWithIdentityEnrollments()
+        {
+            return await unitOfWork.Students.GetAllWithIdentityEnrollmentsAsync();
+        }
+
+        public async Task<int> CountStudents()
+        {
+            return await unitOfWork.Students.GetTotalNumberOfStudentsAsync();
+        }
     }
 }

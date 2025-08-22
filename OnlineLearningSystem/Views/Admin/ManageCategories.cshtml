@@ -1,0 +1,66 @@
+﻿@model OnlineLearningSystem.ViewModels.ManageCategoryViewModel
+
+@{
+    ViewData["Title"] = "Manage Categories";
+}
+
+<h1 class="mb-4">Manage Categories</h1>
+
+<!-- Create Category Form -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h4 class="card-title mb-3">Add New Category</h4>
+        <form asp-action="Create" asp-controller="Category" method="post" class="row g-3">
+            <div class="col-md-8">
+                <input asp-for="CreateCategory.Name" name="Name" class="form-control" placeholder="Enter category name" />
+                <span asp-validation-for="CreateCategory.Name" class="text-danger"></span>
+                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary w-100">Add Category</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Categories List -->
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h4 class="card-title mb-3">All Categories</h4>
+        @if (Model.Categories != null && Model.Categories.Any())
+        {
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Category Name</th>
+                        <th>Number of Courses</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var category in Model.Categories)
+                    {
+                        <tr>
+                            <td>@category.CategoryName</td>
+                            <td>@category.NumberOfCourses</td>
+                            <td class="text-end">
+                                <form asp-action="Delete" asp-controller="Category" method="post" class="d-inline">
+                                    <input type="hidden" name="categoryId" value="@category.CategoryId" />
+                                    <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                        &times;
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="text-muted">No categories available.</p>
+        }
+    </div>
+</div>
+

@@ -7,11 +7,19 @@ using OnlineLearningSystem.Models;
 namespace OnlineLearningSystem.Repositories
 {
 
-    //should be transferd into stored procedures
-
     public class StudentRepository : Repository<Student>, IStudentRepository
     {
         public StudentRepository(ApplicationDbContext context) : base(context) { }
+
+        public async Task<IEnumerable<Student>> GetAllWithIdentityEnrollmentsAsync()
+        {
+            return await context.Students.Include(e => e.IdentityUser).Include(e => e.Enrollments).ToListAsync();
+        }
+
+        public async Task<int> GetTotalNumberOfStudentsAsync()
+        {
+            return await context.Students.CountAsync();
+        }
 
         public async Task<Student> GetWithEnrollmentsAsync(int studentId)
         {
@@ -23,7 +31,7 @@ namespace OnlineLearningSystem.Repositories
         {
             var result = await context.Students.Include(e => e.Follows).ThenInclude(e => e.Instructor).FirstOrDefaultAsync(e => e.Id == studentId);
             return result ?? throw new InvalidOperationException();
-        }
+        }        
 
         public async Task<Student> GetWithLikedCoursesAsync(int studentId)
         {

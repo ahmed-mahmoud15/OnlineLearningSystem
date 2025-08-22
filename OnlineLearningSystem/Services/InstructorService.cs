@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Identity;
 using OnlineLearningSystem.Common_Functionalities;
 using OnlineLearningSystem.Models;
 using OnlineLearningSystem.Repositories;
@@ -113,6 +114,16 @@ namespace OnlineLearningSystem.Services
             }
             
             return model;
+        }
+
+        public async Task<IEnumerable<Instructor>> GetAllInstructorsWithIdentityCourses()
+        {
+            return await unitOfWork.Instructors.GetAllWithIdentityCoursesAsync();
+        }
+
+        public async Task<int> CountInstructors()
+        {
+            return await unitOfWork.Instructors.GetTotalNumberOfInstructorsAsync();
         }
     }
 }

@@ -8,5 +8,9 @@ namespace OnlineLearningSystem.Repositories
         public Task<Instructor> GetWithFollowersAsync(int instructorId);
 
         public Task<IEnumerable<Instructor>> GetAllWithCoursesFollowersAsync();
+
+        public Task<IEnumerable<Instructor>> GetAllWithIdentityCoursesAsync();
+        public Task<int> GetTotalNumberOfInstructorsAsync();
+
     }
 }
