@@ -2,6 +2,6 @@
 {
     public class ManageCoursesViewModel
     {
-        public IList<ShowCoursesInHomeViewModel> Courses { get; set; } = new List<ShowCoursesInHomeViewModel>();
+        public IList<ShowCoursesInAdminViewModel> Courses { get; set; } = new List<ShowCoursesInAdminViewModel>();
     }
 }

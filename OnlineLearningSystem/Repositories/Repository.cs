@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using OnlineLearningSystem.Data;
+using OnlineLearningSystem.DTOs;
 
 namespace OnlineLearningSystem.Repositories
 {
@@ -24,7 +25,8 @@ namespace OnlineLearningSystem.Repositories
         public async Task DeleteAsync(object id)
         {
             T record = await GetByIdAsync(id);
-            if (record != null) {
+            if (record != null)
+            {
                 table.Remove(record);
             }
         }
@@ -63,5 +65,30 @@ namespace OnlineLearningSystem.Repositories
         {
             table.Remove(record);
         }
+
+
+        public async Task<PaginateResultDTO<T>> GetAllPaginationAsync(int pageNumber, int pageSize, params Expression<Func<T, object>>[] includes)
+        {
+            if (pageNumber <= 0) pageNumber = 1;
+            if (pageSize <= 0) pageSize = 10;
+
+            IQueryable<T> query = table;
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+            int totalCount = query.Count();
+
+            var result = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            return new PaginateResultDTO<T>() {
+                Items = result,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalCount = totalCount
+            };
+        }
+
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace OnlineLearningSystem.ViewModels
 {
-    public class ShowCoursesInHomeViewModel
+    public class ShowCoursesInfoViewModel
     {
         public int CourseId { get; set; }
         public string CourseName { get; set; }
@@ -16,5 +16,7 @@
         public int NumberOfLikes { get; set; }
 
         public DateTime CreatedDate { get; set; }
+
+        public int Price { get; set; }
     }
 }

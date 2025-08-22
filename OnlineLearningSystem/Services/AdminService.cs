@@ -50,7 +50,7 @@ namespace OnlineLearningSystem.Services
             
             foreach(var course in await courseService.GetAllCoursesAsync())
             {
-                model.Courses.Add(new ShowCoursesInHomeViewModel() {
+                model.Courses.Add(new ShowCoursesInAdminViewModel() {
                     CourseId = course.CourseId,
                     CategoryName = course.CategoryName,
                     CourseName = course.CourseName,

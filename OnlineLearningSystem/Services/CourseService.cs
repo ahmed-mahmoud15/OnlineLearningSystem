@@ -2,6 +2,7 @@
 using OnlineLearningSystem.Repositories;
 using OnlineLearningSystem.ViewModels;
 using OnlineLearningSystem.Common_Functionalities;
+using OnlineLearningSystem.DTOs;
 namespace OnlineLearningSystem.Services
 {
     public class CourseService : ICourseService
@@ -40,11 +41,11 @@ namespace OnlineLearningSystem.Services
             return await unitOfWork.Courses.GetTotalNumberOfCoursesAsync();
         }
 
-        public async Task<IEnumerable<ShowCoursesInHomeViewModel>> GetAllCoursesAsync()
+        public async Task<IEnumerable<ShowCoursesInAdminViewModel>> GetAllCoursesAsync()
         {
             var courses = await unitOfWork.Courses.GetAllWithInstructorCategoryLikesAsync();
 
-            IList<ShowCoursesInHomeViewModel> model = courses.Select(e => new ShowCoursesInHomeViewModel() {
+            IList<ShowCoursesInAdminViewModel> model = courses.Select(e => new ShowCoursesInAdminViewModel() {
                 CourseId = e.Id,
                 CategoryName = e.Category.Name,
                 CourseName = e.Name,
@@ -56,6 +57,34 @@ namespace OnlineLearningSystem.Services
             }).ToList();
 
             return model;
+        }
+
+        public async Task<PaginateResultDTO<ShowCoursesInfoViewModel>> GetAllCoursesPaginationAsync(int count, int page)
+        {
+            var data = await unitOfWork.Courses.GetAllPaginationAsync(page, count, c => c.Instructor, c => c.Enrollments, c => c.Category, c => c.LikedBy, c => c.Lessons);
+
+            IList<ShowCoursesInfoViewModel> model = new List<ShowCoursesInfoViewModel>();
+
+            foreach (var item in data.Items) {
+                model.Add(new ShowCoursesInfoViewModel() {
+                    CategoryName = item.Category.Name,
+                    CourseId = item.Id,
+                    CourseName = item.Name,
+                    CreatedDate = item.CreationDate,
+                    InstructorId = item.Instructor.Id,
+                    InstructorName = item.Instructor.FirstName + " " + item.Instructor.LastName,
+                    NumberOfLessons = item.Lessons.Count,
+                    NumberOfLikes = item.LikedBy.Count,
+                    Price = item.Price
+                });
+            }
+
+            return new PaginateResultDTO<ShowCoursesInfoViewModel>() {
+                Items = model,
+                PageNumber = data.PageNumber,
+                PageSize = data.PageSize,
+                TotalCount = data.TotalCount
+            };
         }
 
         public async Task<CourseDetailsViewModel> GetCourseDetailsAsync(int courseId)

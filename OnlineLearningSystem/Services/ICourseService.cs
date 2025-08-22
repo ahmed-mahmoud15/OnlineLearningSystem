@@ -1,4 +1,5 @@
-﻿using OnlineLearningSystem.ViewModels;
+﻿using OnlineLearningSystem.DTOs;
+using OnlineLearningSystem.ViewModels;
 
 namespace OnlineLearningSystem.Services
 {
@@ -6,7 +7,9 @@ namespace OnlineLearningSystem.Services
     {
         public Task AddCourseAsync(AddCourseViewModel model);
         //public Task GetAllCoursesByCategoryAsync(int categoryId);
-        public Task<IEnumerable<ShowCoursesInHomeViewModel>> GetAllCoursesAsync();
+        public Task<IEnumerable<ShowCoursesInAdminViewModel>> GetAllCoursesAsync();
+        public Task<PaginateResultDTO<ShowCoursesInfoViewModel>> GetAllCoursesPaginationAsync(int count, int page);
+
         public Task<CourseDetailsViewModel> GetCourseDetailsAsync(int courseId);
 
         public Task<int> CountCourses();

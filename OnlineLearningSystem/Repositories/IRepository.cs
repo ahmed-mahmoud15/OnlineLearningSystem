@@ -1,4 +1,6 @@
 ﻿using System.Linq.Expressions;
+using OnlineLearningSystem.DTOs;
+using OnlineLearningSystem.ViewModels;
 
 namespace OnlineLearningSystem.Repositories
 {
@@ -13,5 +15,6 @@ namespace OnlineLearningSystem.Repositories
         public Task DeleteAsync(object id);
         public void DeleteObject(T record);
         public Task SaveAsync();
+        public Task<PaginateResultDTO<T>> GetAllPaginationAsync(int pageNumber, int pageSize, params Expression<Func<T, object>>[] includes);
     }
 }

@@ -23,6 +23,11 @@ namespace OnlineLearningSystem.Controllers
             this.likeService = likeService;
         }
 
+        public async Task<IActionResult> Index(int count = 10, int page = 1)
+        {
+            return View(await courseService.GetAllCoursesPaginationAsync(count, page));
+        }
+
         [HttpGet]
         [Authorize(Roles = "Instructor")]
         public async Task<IActionResult> AddCourse(int id)
