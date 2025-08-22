@@ -44,7 +44,7 @@ namespace OnlineLearningSystem.Services
 
         public async Task<IEnumerable<ShowCoursesInAdminViewModel>> GetAllCoursesAsync()
         {
-            var courses = await unitOfWork.Courses.GetAllWithInstructorCategoryLikesAsync();
+            var courses = await unitOfWork.Courses.GetAllWithInstructorCategoryLikesLessonsAsync();
 
             IList<ShowCoursesInAdminViewModel> model = courses.Select(e => new ShowCoursesInAdminViewModel() {
                 CourseId = e.Id,
@@ -90,7 +90,7 @@ namespace OnlineLearningSystem.Services
 
         public async Task<CourseDetailsViewModel> GetCourseDetailsAsync(int courseId)
         {
-            Course course = await unitOfWork.Courses.GetWithInstructorCategoryLikesAsync(courseId);
+            Course course = await unitOfWork.Courses.GetWithInstructorCategoryLikesLessonsAsync(courseId);
 
             CourseDetailsViewModel model = new CourseDetailsViewModel()
             {

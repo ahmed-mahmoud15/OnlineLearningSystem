@@ -22,5 +22,30 @@ namespace OnlineLearningSystem.Common_Functionalities
                 user.ProfilePhotoPath = "/images/" + fileName;
             }
         }
+
+        public static void HandleAttachment(Lesson lesson, IFormFile file)
+        {
+            if (file != null && file.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(
+                    Directory.GetCurrentDirectory(),
+                    $"wwwroot/uploads/Course_{lesson.CourseId}");
+
+                Directory.CreateDirectory(uploadsFolder);
+
+                var safeName = Path.GetFileName(file.FileName);
+                var fileName = $"{lesson.SequenceNumber}_{safeName}";
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var fs = new FileStream(filePath, FileMode.Create))
+                {
+                    file.CopyTo(fs);
+                }
+
+                // ✅ correct: root-relative URL to static file
+                lesson.FilePath = $"/uploads/Course_{lesson.CourseId}/{fileName}";
+            }
+        }
+
     }
 }

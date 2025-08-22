@@ -56,6 +56,30 @@ namespace OnlineLearningSystem.Controllers
             }
             return RedirectToAction("MyProfile");
         }
+
+        //[HttpPost]
+        //public async Task<IActionResult> CompleteLesson(int courseId, int seqNum, string returnUrl = null)
+        //{
+        //    var userId = int.Parse(User.FindFirst("UserId")?.Value);
+        //    try
+        //    {
+        //        //await followService.FollowInstructor(userId, instructorId);
+        //        TempData["AlertMessage"] = "You have successfully followed the instructor.";
+        //        TempData["AlertType"] = "success";
+        //    }
+        //    catch (ArgumentNullException ex)
+        //    {
+        //        TempData["AlertMessage"] = ex.Message;
+        //        TempData["AlertType"] = "warning";
+        //    }
+        //    catch (InvalidOperationException ex)
+        //    {
+        //        TempData["AlertMessage"] = ex.Message;
+        //        TempData["AlertType"] = "danger";
+        //    }
+
+        //    return LocalRedirect(returnUrl);
+        //}
     }
 
     

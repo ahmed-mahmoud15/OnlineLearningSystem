@@ -11,7 +11,7 @@ namespace OnlineLearningSystem.Repositories
 
         public IRepository<Enrollment> Enrollments { get; }
 
-        public IRepository<Lesson> Lessons { get; }
+        public ILessonRepository Lessons { get; }
 
         public ICategoryRepository Categories { get; }
 

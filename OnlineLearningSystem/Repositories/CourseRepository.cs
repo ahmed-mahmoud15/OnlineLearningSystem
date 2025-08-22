@@ -10,9 +10,9 @@ namespace OnlineLearningSystem.Repositories
         {
         }
 
-        public async Task<IEnumerable<Course>> GetAllWithInstructorCategoryLikesAsync()
+        public async Task<IEnumerable<Course>> GetAllWithInstructorCategoryLikesLessonsAsync()
         {
-            return await context.Courses.Include(e => e.Category).Include(e => e.Instructor).Include(e => e.LikedBy).Include(e => e.Enrollments).ToListAsync();
+            return await context.Courses.Include(e => e.Category).Include(e => e.Instructor).Include(e => e.LikedBy).Include(e => e.Enrollments).Include(e => e.Lessons).ToListAsync();
         }
 
         public async Task<IEnumerable<Course>> GetByCategoryIdAsync(int categoryId)
@@ -30,9 +30,9 @@ namespace OnlineLearningSystem.Repositories
             return await context.Courses.CountAsync();
         }
 
-        public async Task<Course> GetWithInstructorCategoryLikesAsync(int courseId)
+        public async Task<Course> GetWithInstructorCategoryLikesLessonsAsync(int courseId)
         {
-            return await context.Courses.Include(e => e.Category).Include(e => e.Instructor).Include(e => e.LikedBy).Include(e => e.Enrollments).FirstOrDefaultAsync(e => e.Id == courseId);
+            return await context.Courses.Include(e => e.Category).Include(e => e.Instructor).Include(e => e.LikedBy).Include(e => e.Lessons).Include(e => e.Enrollments).FirstOrDefaultAsync(e => e.Id == courseId);
         }
 
         public async Task<Course> GetWithLessonsAsync(int courseId)

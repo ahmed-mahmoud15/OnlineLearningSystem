@@ -28,7 +28,11 @@ namespace OnlineLearningSystem.Repositories
 
         public async Task<Instructor> GetWithCoursesAsync(int instructorId)
         {
-            var result = await context.Instructors.Include(e => e.Courses).ThenInclude(e => e.Enrollments).FirstOrDefaultAsync(e => e.Id == instructorId);
+            var result = await context.Instructors.Include(e => e.FollowedBy)
+                               .Include(e => e.Courses).ThenInclude(e => e.Enrollments)
+                               .Include(e =>e.Courses).ThenInclude(e => e.Lessons)
+                               .Include(e =>e.Courses).ThenInclude(e => e.LikedBy)
+                               .FirstOrDefaultAsync(e => e.Id == instructorId);
             return result ?? throw new InvalidOperationException();
         }
 

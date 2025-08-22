@@ -19,7 +19,10 @@
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <div>
                             <span class="badge bg-secondary me-2">#@lesson.SequenceNumber</span>
-                            <strong>@lesson.LessonTitle</strong>
+                            <a asp-action="ViewLesson" asp-controller="Lesson" asp-route-courseId="@ViewData["CourseId"]" asp-route-seqNum="@lesson.SequenceNumber">
+								<strong>@lesson.LessonTitle</strong>
+                            </a>
+                            
                         </div>
                         <span class="badge bg-info text-dark">@lesson.LessonType</span>
                     </li>

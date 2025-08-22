@@ -1,0 +1,54 @@
+﻿@model OnlineLearningSystem.ViewModels.CreateLessonViewModel
+
+<div class="container mt-5">
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-primary text-white rounded-top-4">
+            <h4 class="mb-0">Create Lesson</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="CreateLesson" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <!-- Hidden Fields -->
+                <input type="hidden" asp-for="CourseId" />
+                <input type="hidden" asp-for="SequenceNumber" />
+
+                <div class="mb-4">
+                    <label asp-for="LessonTitle" class="form-label fw-semibold"></label>
+                    <input asp-for="LessonTitle" class="form-control rounded-pill shadow-sm" placeholder="Enter lesson title" />
+                    <span asp-validation-for="LessonTitle" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="LessonDescription" class="form-label fw-semibold"></label>
+                    <textarea asp-for="LessonDescription" class="form-control rounded-3 shadow-sm" rows="4" placeholder="Enter lesson description"></textarea>
+                    <span asp-validation-for="LessonDescription" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="LessonType" class="form-label fw-semibold"></label>
+                    <select asp-for="LessonType" class="form-select rounded-pill shadow-sm" asp-items="Html.GetEnumSelectList<OnlineLearningSystem.Models.Type>()">
+                        <option value="">-- Select Type --</option>
+                    </select>
+                    <span asp-validation-for="LessonType" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="LessonFile" class="form-label fw-semibold"></label>
+                    <input asp-for="LessonFile" type="file" class="form-control rounded-pill shadow-sm" />
+                    <span asp-validation-for="LessonFile" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <a class="btn btn-outline-secondary rounded-pill px-4 shadow-sm"
+                       asp-action="CourseDetails"
+                       asp-controller="Course"
+                       asp-route-id="@Model.CourseId">
+                        Back
+                    </a>
+                    <input type="submit" value="Create Lesson" class="btn btn-primary rounded-pill px-4 shadow-sm" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

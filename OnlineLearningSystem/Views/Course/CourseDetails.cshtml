@@ -8,25 +8,30 @@
 	var isLiked = (bool)(ViewBag.IsLiked ?? false);
 	var isAuthenticated = User.Identity.IsAuthenticated;
 	var isStudent = User.IsInRole("Student");
+	var isInstructor = User.IsInRole("Instructor");
 }
 
 <div class="container mt-5">
 	@await Html.PartialAsync("_CourseHeaderInfo", Model)
 
-	@await Html.PartialAsync("_CourseLessons", Model.Lessons)
+	@await Html.PartialAsync("_CourseLessons", Model.Lessons, new ViewDataDictionary(ViewData){{"CourseId", @Model.CourseId}})
 
 	<div class="mt-4 d-flex justify-content-between">
 
-		<a asp-action="Index" asp-controller="Course" class="btn btn-outline-secondary rounded-pill px-4 shadow-sm">
-			<i class="bi bi-arrow-left"></i> Back to Courses
-		</a>
+		
 		@if (!isAuthenticated)
 		{
-			<!-- Anonymous user: redirect to login -->
+			<a asp-action="Index" asp-controller="Course" class="btn btn-outline-secondary rounded-pill px-4 shadow-sm">
+				<i class="bi bi-arrow-left"></i> Back to Courses
+			</a>
+
 			<a class="btn btn-primary rounded-pill px-4 shadow-sm" asp-area="Identity" asp-page="/Account/Login">Login</a>
 		}
 		else if (isStudent)
 		{
+			<a asp-action="MyProfile" asp-controller="Student" class="btn btn-outline-secondary rounded-pill px-4 shadow-sm">
+				<i class="bi bi-arrow-left"></i> Bact to Profile
+			</a>
 			<!-- Authenticated student: enroll directly -->
 			@if (isEnrolled)
 			{
@@ -62,6 +67,12 @@
 					<button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">Like</button>
 				</form>
 			}
+		}else if (isInstructor)
+		{
+			<a asp-action="MyProfile" asp-controller="Instructor" class="btn btn-outline-secondary rounded-pill px-4 shadow-sm">
+				<i class="bi bi-arrow-left"></i> Back to Profile
+			</a>
+			<a class="btn btn-primary rounded-pill px-4 shadow-sm" asp-action="CreateLesson" asp-controller="Lesson" asp-route-courseId="@Model.CourseId">Add Lesson</a>
 		}
 	</div>
 </div>

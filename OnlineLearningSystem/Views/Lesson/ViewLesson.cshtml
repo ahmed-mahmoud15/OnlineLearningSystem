@@ -1,0 +1,119 @@
+﻿@model OnlineLearningSystem.ViewModels.ViewLessonViewModel
+@using System
+
+@{
+    ViewData["Title"] = "View Lesson";
+
+    var prevSeq = Model.SequenceNumber - 1;
+    var nextSeq = Model.SequenceNumber + 1;
+    var prevDisabled = prevSeq < 1;
+
+    // Turn any app-relative or root path into a usable URL
+    string fileUrl = string.IsNullOrWhiteSpace(Model.FilePath) ? null : Url.Content(Model.FilePath);
+}
+
+<h1 class="mb-4">View Lesson</h1>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">@Model.CourseName</h4>
+    </div>
+
+    <div class="card-body">
+        <div class="mb-2">
+            <h3 class="mb-1">@Model.LessonName</h3>
+            <div class="text-muted">Lesson #@Model.SequenceNumber</div>
+        </div>
+
+        @if (!string.IsNullOrWhiteSpace(Model.LessonDescription))
+        {
+            <p class="lead mb-4">@Model.LessonDescription</p>
+        }
+
+        <div class="lesson-file mb-4">
+            @if (string.IsNullOrWhiteSpace(fileUrl))
+            {
+                <div class="alert alert-warning mb-0">No file available for this lesson.</div>
+            }
+            else
+            {
+                @switch (Model.LessonType.ToString().ToLower())
+                {
+                    case "image":
+                        <img src="@fileUrl" class="img-fluid rounded shadow-sm" alt="@Model.LessonName" />
+                        break;
+
+                    case "video":
+                        <video controls class="w-100 rounded shadow-sm">
+                            <source src="@fileUrl" />
+                            Your browser does not support the video tag.
+                        </video>
+                        break;
+
+                    case "audio":
+                        <audio controls class="w-100">
+                            <source src="@fileUrl" />
+                            Your browser does not support the audio element.
+                        </audio>
+                        break;
+
+                    case "pdf":
+                        <iframe src="@fileUrl" class="w-100 rounded shadow-sm" style="height:600px;" frameborder="0"></iframe>
+                        break;
+
+                    default:
+                        <div class="alert alert-info mb-0">
+                            Preview not supported. <a href="@fileUrl" target="_blank" rel="noopener">Open file</a>.
+                        </div>
+                        break;
+                }
+            }
+        </div>
+
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div class="d-flex gap-2">
+                <a asp-action="ViewLesson"
+                   asp-controller="Lesson"
+                   asp-route-courseId="@Model.CourseId"
+                   asp-route-seqNum="@prevSeq"
+                   class="btn btn-outline-primary @(prevDisabled ? "disabled" : null)"
+                   tabindex="@(prevDisabled ? "-1" : null)"
+                   aria-disabled="@(prevDisabled ? "true" : null)">
+                    Previous Lesson
+                </a>
+
+                <a asp-action="ViewLesson"
+                   asp-controller="Lesson"
+                   asp-route-courseId="@Model.CourseId"
+                   asp-route-seqNum="@nextSeq"
+                   class="btn btn-outline-primary">
+                    Next Lesson
+                </a>
+            </div>
+
+            @if (User?.IsInRole("Student") == true)
+            {
+                <a asp-action="CompleteLesson"
+                   asp-controller="Student"
+                   asp-route-courseId="@Model.CourseId"
+                   asp-route-seqNum="@Model.SequenceNumber"
+                   class="btn btn-success">
+                    Complete
+                </a>
+            }
+            @if (User?.IsInRole("Instructor") == true)
+            {
+                <a asp-action="EditLesson"
+                   asp-controller="Lesson"
+                   asp-route-lessonId="@Model.LessonId"
+                   class="btn btn-warning">
+                    Edit
+                </a>
+            }
+        </div>
+    </div>
+</div>
+
+<div>
+    <a asp-action="CourseDetails" asp-controller="Course" asp-route-id="@Model.CourseId" class="btn btn-secondary">Back to Course</a>
+</div>

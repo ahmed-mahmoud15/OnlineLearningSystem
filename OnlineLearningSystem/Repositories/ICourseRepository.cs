@@ -12,8 +12,8 @@ namespace OnlineLearningSystem.Repositories
         
         public Task<IEnumerable<Course>> GetByInstructorIdAsync(int instructorId);
 
-        public Task<IEnumerable<Course>> GetAllWithInstructorCategoryLikesAsync();
-        public Task<Course> GetWithInstructorCategoryLikesAsync(int courseId);
+        public Task<IEnumerable<Course>> GetAllWithInstructorCategoryLikesLessonsAsync();
+        public Task<Course> GetWithInstructorCategoryLikesLessonsAsync(int courseId);
 
         public Task<int> GetTotalNumberOfCoursesAsync();
     }

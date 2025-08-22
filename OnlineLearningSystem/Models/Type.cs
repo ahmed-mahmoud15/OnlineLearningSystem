@@ -4,6 +4,7 @@
     {
         Video = 1,
         Article, 
-        Audio
+        Audio,
+        Image
     }
 }
