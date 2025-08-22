@@ -22,6 +22,8 @@ namespace OnlineLearningSystem.Configurations
 
             builder.Property(u => u.BirthDate).IsRequired();
 
+            builder.Property(u => u.IaBanned).IsRequired().HasDefaultValue(false);
+
             builder.HasOne(u => u.IdentityUser).WithOne().HasForeignKey<User>(u => u.IdentityId).IsRequired();
        }
     }

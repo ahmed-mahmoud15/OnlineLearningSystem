@@ -9,6 +9,8 @@ namespace OnlineLearningSystem.Models
 
         public string Title { get; set; }
 
+        public string? Description { get; set; }
+
         public int SequenceNumber { get; set; }
 
         public Type Type { get; set; }

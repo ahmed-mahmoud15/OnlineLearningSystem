@@ -30,11 +30,23 @@
                         <!-- Actions -->
                         <div class="col-md-3 text-end p-3">
                             <!-- Ban Form -->
-                            <form asp-action="BanUser" asp-controller="Admin" method="post" class="mb-2">
-                                <input type="hidden" name="studentId" value="@student.StudentId" />
-                                <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
-                                <button type="submit" class="btn btn-danger w-100">Ban</button>
-                            </form>
+                            @if (student.IsBanned)
+                            {
+                                <form asp-action="UnBanUser" asp-controller="Admin" method="post" class="mb-2">
+                                    <input type="hidden" name="id" value="@student.StudentId" />
+                                    <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                    <button type="submit" class="btn btn-danger w-100">Unban</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-action="BanUser" asp-controller="Admin" method="post" class="mb-2">
+                                    <input type="hidden" name="id" value="@student.StudentId" />
+                                    <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+                                    <button type="submit" class="btn btn-danger w-100">Ban</button>
+                                </form>
+                            }
+                            
 
                             <!-- Show Payment Toggle Button -->
                             <button id="btn-payment-@student.StudentId" type="button" class="btn btn-primary w-100 mb-2" onclick="showPaymentForm('@student.StudentId')">

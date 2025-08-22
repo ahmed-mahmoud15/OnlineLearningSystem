@@ -18,6 +18,21 @@ namespace OnlineLearningSystem.Services
             this.userManager = userManager;
         }
 
+        public async Task BanUser(int userId)
+        {
+            User user = await CheckEntity.CheckAndGetUserAsync(userId, unitOfWork);
+
+            user.IaBanned = true;
+            unitOfWork.Users.Update(user);
+            await unitOfWork.CompleteAsync();
+        }
+
+        public async Task<bool> CheckIsUserBanned(int userId)
+        {
+            User user = await CheckEntity.CheckAndGetUserAsync(userId, unitOfWork);
+            return user.IaBanned;
+        }
+
         public Task<User> GetUserByIdentityIdAsync(string identityId)
         {
             return unitOfWork.Users.GetByIdentityId(identityId);
@@ -81,6 +96,13 @@ namespace OnlineLearningSystem.Services
             await unitOfWork.CompleteAsync();
         }
 
-        
+        public async Task UnbanUser(int userId)
+        {
+            User user = await CheckEntity.CheckAndGetUserAsync(userId, unitOfWork);
+
+            user.IaBanned = false;
+            unitOfWork.Users.Update(user);
+            await unitOfWork.CompleteAsync();
+        }
     }
 }

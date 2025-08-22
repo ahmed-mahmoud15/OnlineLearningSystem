@@ -77,7 +77,8 @@ namespace OnlineLearningSystem.Services
                     InstructorName = instructor.FirstName + " " + instructor.LastName,
                     InstructorEmail = instructor.IdentityUser.Email,
                     NumberOfCourses= instructor.Courses.Count,
-                    PhotoPath = instructor.ProfilePhotoPath
+                    PhotoPath = instructor.ProfilePhotoPath,
+                    IsBanned = instructor.IaBanned
                 });
             }
             return model;
@@ -95,7 +96,8 @@ namespace OnlineLearningSystem.Services
                     StudentName = student.FirstName + " " + student.LastName,
                     NumberOfCoursesEnrolled = student.Enrollments.Count,
                     PhotoPath = student.ProfilePhotoPath,
-                    Coins = student.Coins
+                    Coins = student.Coins,
+                    IsBanned = student.IaBanned
                 });
             }
             return model;

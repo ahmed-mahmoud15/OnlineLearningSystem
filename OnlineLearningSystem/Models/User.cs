@@ -16,6 +16,8 @@ namespace OnlineLearningSystem.Models
 
         public string? ProfilePhotoPath { get; set; }
 
+        public bool IaBanned { get; set; }
+
         public string IdentityId { get; set; }
 
         public IdentityUser IdentityUser { get; set; }

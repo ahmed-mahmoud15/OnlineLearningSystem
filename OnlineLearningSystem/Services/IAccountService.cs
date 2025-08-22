@@ -10,5 +10,10 @@ namespace OnlineLearningSystem.Services
         public Task RegisterAdmin(User user, IFormFile file);
 
         public Task<User> GetUserByIdentityIdAsync(string identityId);
+
+        public Task<bool> CheckIsUserBanned(int userId);
+
+        public Task BanUser(int userId);
+        public Task UnbanUser(int userId);
     }
 }

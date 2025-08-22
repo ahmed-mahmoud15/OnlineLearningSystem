@@ -11,6 +11,8 @@ namespace OnlineLearningSystem.ViewModels
 
         public string PhotoPath { get; set; }
 
+        public bool IsBanned { get; set; }
+
         public int Coins { get; set; }
 
         public int NumberOfCoursesEnrolled { get; set; }

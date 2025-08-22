@@ -14,6 +14,8 @@ namespace OnlineLearningSystem.Configurations
 
             builder.Property(e => e.Title).IsRequired().HasMaxLength(100);
 
+            builder.Property(e => e.Description).IsRequired(false);
+
             builder.Property(e => e.FilePath).IsRequired();
 
             builder.Property(e => e.Type).HasConversion<int>().IsRequired();

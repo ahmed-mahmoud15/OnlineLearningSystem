@@ -9,6 +9,8 @@
 
         public string PhotoPath { get; set; }
 
+        public bool IsBanned { get; set; }
+
         public int NumberOfCourses { get; set; }
     }
 }

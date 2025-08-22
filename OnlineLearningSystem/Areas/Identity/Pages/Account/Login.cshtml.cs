@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using OnlineLearningSystem.Services;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Shared;
 
 namespace OnlineLearningSystem.Areas.Identity.Pages.Account
 {
@@ -119,11 +120,20 @@ namespace OnlineLearningSystem.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
-
+                    
                     var user = await _userManager.FindByEmailAsync(Input.Email);
                     var roles = await _userManager.GetRolesAsync(user);
                     var appUser = await _accountService.GetUserByIdentityIdAsync(user.Id);
+
+                    if (await _accountService.CheckIsUserBanned(appUser.Id))
+                    {
+                        ModelState.AddModelError(string.Empty, "This user is Banned, Please Contact Customer Service.");
+                        await _signInManager.SignOutAsync();
+                        
+                        return Page();
+                    }
+
+                    _logger.LogInformation("User logged in.");
 
                     if (roles.Contains("Admin"))
                     {

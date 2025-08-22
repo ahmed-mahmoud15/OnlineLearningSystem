@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Runtime.InteropServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OnlineLearningSystem.Services;
 using OnlineLearningSystem.ViewModels;
@@ -46,8 +47,34 @@ namespace OnlineLearningSystem.Controllers
 
         public async Task<IActionResult> BanUser(int id, string returnUrl)
         {
-            TempData["AlertMessage"] = "Not Implemented Yet";
-            TempData["AlertType"] = "danger";
+            try
+            {
+                await accountService.BanUser(id);
+                TempData["AlertMessage"] = "User Banned";
+                TempData["AlertType"] = "success";
+            }
+            catch (Exception ex) {
+                TempData["AlertMessage"] = ex.Message;
+                TempData["AlertType"] = "warning";
+            }
+            
+            return LocalRedirect(returnUrl);
+        }
+
+        public async Task<IActionResult> UnBanUser(int id, string returnUrl)
+        {
+            try
+            {
+                await accountService.UnbanUser(id);
+                TempData["AlertMessage"] = "User Unbanned";
+                TempData["AlertType"] = "success";
+            }
+            catch (Exception ex)
+            {
+                TempData["AlertMessage"] = ex.Message;
+                TempData["AlertType"] = "warning";
+            }
+
             return LocalRedirect(returnUrl);
         }
 
