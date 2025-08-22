@@ -1,6 +1,7 @@
 ﻿using OnlineLearningSystem.Common_Functionalities;
 using OnlineLearningSystem.Models;
 using OnlineLearningSystem.Repositories;
+using OnlineLearningSystem.ViewModels;
 
 namespace OnlineLearningSystem.Services
 {
@@ -56,6 +57,50 @@ namespace OnlineLearningSystem.Services
             await unitOfWork.Enrollments.AddAsync(enrollment);
 
             await unitOfWork.CompleteAsync();
+        }
+
+        public async Task<bool> IsStudentCompleteLessonAsync(int studentId, int courseId, int lessonId)
+        {
+            Enrollment enrollment = await unitOfWork.Enrollments.GetEnrollmentWithStudentAndCourseAsync(studentId, courseId);
+            if (enrollment == null) {
+                throw new ArgumentNullException("No Enrollment");
+            }
+
+            Lesson lesson = await unitOfWork.Lessons.GetByIdAsync(lessonId);
+
+            return enrollment.LastViewedLesson >= lesson.SequenceNumber;
+        }
+
+        public async Task<int> CompleteLessonAsync(int studentId, int courseId, int lessonId)
+        {
+            Enrollment enrollment = await unitOfWork.Enrollments.GetEnrollmentWithStudentAndCourseAsync(studentId, courseId);
+            if (enrollment == null)
+            {
+                throw new ArgumentNullException("No Enrollment");
+            }
+            Lesson lesson = await unitOfWork.Lessons.GetByIdAsync(lessonId);
+
+            enrollment.LastViewedLesson = lesson.SequenceNumber;
+            enrollment.Progress = (float)lesson.SequenceNumber / enrollment.Course.Lessons.Count * 100;
+            unitOfWork.Enrollments.Update(enrollment);
+            await unitOfWork.CompleteAsync();
+            return lesson.SequenceNumber;
+        }
+
+        public async Task<IEnumerable<ShowCourseInStudentProfileViewModel>> GetEnrollmentsInfoAsync(int studentId)
+        {
+            Student student = await CheckEntity.CheckAndGetStudentAsync(studentId, unitOfWork);
+
+            student = await unitOfWork.Students.GetWithEnrollmentsAsync(studentId);
+
+            return student.Enrollments.Select(e => new ShowCourseInStudentProfileViewModel()
+            {
+                EnrollDate = e.Date,
+                Description = e.Course.Description,
+                Id = e.Course.Id,
+                Name = e.Course.Name,
+                Prgress = e.Progress
+            }).ToList();
         }
     }
 }

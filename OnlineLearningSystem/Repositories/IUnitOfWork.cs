@@ -9,7 +9,7 @@ namespace OnlineLearningSystem.Repositories
         public IInstructorRepository Instructors { get; }
         public ICourseRepository Courses { get; }
 
-        public IRepository<Enrollment> Enrollments { get; }
+        public IEnrollmentRepository Enrollments { get; }
 
         public ILessonRepository Lessons { get; }
 

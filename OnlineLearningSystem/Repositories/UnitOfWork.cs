@@ -10,7 +10,7 @@ namespace OnlineLearningSystem.Repositories
         private IStudentRepository studentRepository;
         private IInstructorRepository instructorRepository;
         private ICourseRepository courseRepository;
-        private IRepository<Enrollment> enrollmentRepository;
+        private IEnrollmentRepository enrollmentRepository;
         private ILessonRepository lessonRepository;
         private ICategoryRepository categoryRepository;
         private IRepository<Like> likeRepository;
@@ -30,7 +30,7 @@ namespace OnlineLearningSystem.Repositories
 
         public ICourseRepository Courses => courseRepository ??= new CourseRepository(context);
 
-        public IRepository<Enrollment> Enrollments => enrollmentRepository ??= new Repository<Enrollment>(context);
+        public IEnrollmentRepository Enrollments => enrollmentRepository ??= new EnrollmentRepository(context);
 
         public ILessonRepository Lessons => lessonRepository ??= new LessonRepository(context);
 

@@ -1,0 +1,55 @@
+﻿@model IEnumerable<OnlineLearningSystem.ViewModels.ShowCourseInStudentProfileViewModel>
+
+@{
+    ViewData["Title"] = "My Enrollments";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-primary fw-bold">📚 My Enrollments</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center shadow-sm rounded-3">
+            You are not enrolled in any courses yet.
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm border-0 rounded-4">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title fw-bold text-dark">@item.Name</h5>
+                            <p class="card-text text-muted small">@item.Description</p>
+
+                            <p class="mb-2">
+                                <span class="fw-semibold">Enrolled At:</span>
+                                @item.EnrollDate.ToString("dd MMM yyyy")
+                            </p>
+
+                            <div class="mb-2">
+                                <span class="fw-semibold">Progress:</span>
+                                <div class="progress rounded-pill shadow-sm" style="height: 20px;">
+                                    <div class="progress-bar bg-success fw-semibold" role="progressbar"
+                                         style="width: @item.Prgress%;"
+                                         aria-valuenow="@item.Prgress" aria-valuemin="0" aria-valuemax="100">
+                                        @item.Prgress.ToString("0")%
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-auto text-end">
+                                <a asp-action="CourseDetails" asp-controller="Course" asp-route-id="@item.Id"
+                                   class="btn btn-primary rounded-pill px-4 shadow-sm">
+                                    View Course
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
