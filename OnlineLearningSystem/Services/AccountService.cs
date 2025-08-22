@@ -74,7 +74,8 @@ namespace OnlineLearningSystem.Services
                 BirthDate = model.BirthDate,
                 LinkedInProfile = model.LinkedInAccount,
                 Experience = model.Experience,
-                IdentityId = userId
+                IdentityId = userId,
+                IaBanned = false
             };
 
             FileHandler.HandleProfileImageUpload(instructor, model.ProfilePhotoPath);
@@ -85,6 +86,15 @@ namespace OnlineLearningSystem.Services
             await userManager.AddClaimAsync(user, new Claim("UserId", instructor.Id.ToString()));
         }
 
+        public async Task RegisterInstructorHimself(Instructor instructor, IFormFile file)
+        {
+            if (instructor == null) throw new ArgumentNullException($"Instructor Is Null");
+            if (file == null) throw new ArgumentNullException($"File Is Null");
+
+            FileHandler.HandleProfileImageUpload(instructor, file);
+            await unitOfWork.Instructors.AddAsync(instructor);
+            await unitOfWork.CompleteAsync();
+        }
 
         public async Task RegisterStudent(Student student, IFormFile file)
         {

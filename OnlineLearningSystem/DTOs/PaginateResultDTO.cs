@@ -1,4 +1,14 @@
-﻿namespace OnlineLearningSystem.DTOs
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using OnlineLearningSystem.Models;
+using OnlineLearningSystem.Services;
+
+namespace OnlineLearningSystem.DTOs
 {
     public class PaginateResultDTO<T>
     {

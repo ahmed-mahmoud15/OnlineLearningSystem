@@ -1,7 +1,7 @@
 ﻿@page
-@model RegisterModel
+@model RegisterInstructorModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Register Instructor";
 }
 
 <div class="container mt-5">
@@ -10,7 +10,7 @@
             <div class="card shadow-lg border-0 rounded-3">
                 <div class="card-body p-4">
                     <h2 class="text-center mb-4">@ViewData["Title"]</h2>
-                    <h5 class="text-center text-muted mb-4">Create a new Student account</h5>
+                    <h5 class="text-center text-muted mb-4">Create a new Instructor account</h5>
                     <hr />
 
                     <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" enctype="multipart/form-data">
@@ -47,9 +47,21 @@
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input asp-for="Input.GithubAccount" class="form-control" aria-required="true" placeholder="www.github.com" />
-                            <label asp-for="Input.GithubAccount"></label>
-                            <span asp-validation-for="Input.GithubAccount" class="text-danger small"></span>
+                            <input asp-for="Input.LinkedInAccount" class="form-control" aria-required="true" placeholder="www.LinkedIn.com" />
+                            <label asp-for="Input.LinkedInAccount"></label>
+                            <span asp-validation-for="Input.LinkedInAccount" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Experience" class="form-control" aria-required="true" />
+                            <label asp-for="Input.Experience"></label>
+                            <span asp-validation-for="Input.Experience" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.YearsOfExperience" class="form-control" aria-required="true" />
+                            <label asp-for="Input.YearsOfExperience"></label>
+                            <span asp-validation-for="Input.YearsOfExperience" class="text-danger small"></span>
                         </div>
 
                         <div class="mb-3">
@@ -74,11 +86,6 @@
                             Register
                         </button>
                     </form>
-                    <div class="text-center mt-3">
-                        <p class="mb-1">
-                            <a class="btn btn-secondary btn-lg w-100" asp-page="./RegisterInstructor" asp-route-returnUrl="@Model.ReturnUrl">Register as a new Instructor</a>
-                        </p>
-                    </div>
                 </div>
             </div>
         </div>

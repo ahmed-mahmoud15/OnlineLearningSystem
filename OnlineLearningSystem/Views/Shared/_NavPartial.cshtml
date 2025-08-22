@@ -1,39 +1,42 @@
-﻿@if (User.IsInRole("Student"))
+﻿@if (User.Identity.IsAuthenticated)
 {
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-action="MyProfile" asp-controller="Student">My Profile</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-action="Index" asp-controller="Course">Discover Courses</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-action="ShowAll" asp-controller="Instructor">Discover Instructors</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-action="MyEnrollments" asp-controller="Enrollment">My Courses</a>
-    </li>
-}
-else if (User.IsInRole("Instructor"))
-{
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-action="MyProfile" asp-controller="Instructor">My Profile</a>
-    </li>
-}
-else if (User.IsInRole("Admin"))
-{
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-action="Dashboard" asp-controller="Admin">Dashboard</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-action="ManageStudents" asp-controller="Admin">Manage Students</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-action="ManageInstructors" asp-controller="Admin">Manage Instructors</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-action="ManageCourses" asp-controller="Admin">Manage Courses</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-action="ManageCategories" asp-controller="Admin">Manage Categories</a>
-    </li>
+    @if (User.IsInRole("Student"))
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-action="MyProfile" asp-controller="Student">My Profile</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-action="Index" asp-controller="Course">Discover Courses</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-action="ShowAll" asp-controller="Instructor">Discover Instructors</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-action="MyEnrollments" asp-controller="Enrollment">My Courses</a>
+        </li>
+    }
+    else if (User.IsInRole("Instructor"))
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-action="MyProfile" asp-controller="Instructor">My Profile</a>
+        </li>
+    }
+    else if (User.IsInRole("Admin"))
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-action="Dashboard" asp-controller="Admin">Dashboard</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-action="ManageStudents" asp-controller="Admin">Manage Students</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-action="ManageInstructors" asp-controller="Admin">Manage Instructors</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-action="ManageCourses" asp-controller="Admin">Manage Courses</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-action="ManageCategories" asp-controller="Admin">Manage Categories</a>
+        </li>
+    }
 }
