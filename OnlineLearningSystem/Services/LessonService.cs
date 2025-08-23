@@ -26,6 +26,7 @@ namespace OnlineLearningSystem.Services
             Course course = await CheckEntity.CheckAndGetCourseAsync(model.CourseId, unitOfWork);
             course = await unitOfWork.Courses.GetWithLessonsAsync(model.CourseId);
 
+
             int totalNumOfLessons = course.Lessons.Count;
 
             Lesson lesson = new Lesson() { 

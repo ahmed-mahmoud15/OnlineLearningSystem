@@ -4,6 +4,7 @@ namespace OnlineLearningSystem.ViewModels
 {
     public class CreateLessonViewModel
     {
+        public int InstructorId { get; set; }
         public int CourseId { get; set; }
 
         [Display(Name = "Title")]

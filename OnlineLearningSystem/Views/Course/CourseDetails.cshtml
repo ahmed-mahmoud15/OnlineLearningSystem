@@ -67,7 +67,7 @@
 					<button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm">Like</button>
 				</form>
 			}
-		}else if (isInstructor)
+		}else if (isInstructor && Model.InstructorId == int.Parse(User.FindFirst("UserId")?.Value))
 		{
 			<a asp-action="MyProfile" asp-controller="Instructor" class="btn btn-outline-secondary rounded-pill px-4 shadow-sm">
 				<i class="bi bi-arrow-left"></i> Back to Profile
