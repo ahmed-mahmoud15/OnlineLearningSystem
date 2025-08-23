@@ -110,11 +110,12 @@
                 }
                 
             }
-            @if (User?.IsInRole("Instructor") == true)
+            @if (User?.IsInRole("Instructor") == true && Model.InstructorId == int.Parse(User?.FindFirst("UserId")?.Value))
             {
                 <a asp-action="EditLesson"
                    asp-controller="Lesson"
                    asp-route-lessonId="@Model.LessonId"
+                   asp-route-instructorId="@Model.InstructorId"
                    class="btn btn-warning">
                     Edit
                 </a>

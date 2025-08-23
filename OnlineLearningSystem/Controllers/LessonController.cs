@@ -22,8 +22,13 @@ namespace OnlineLearningSystem.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Instructor")]
-        public async Task<IActionResult> CreateLesson(int courseId)
+        public async Task<IActionResult> CreateLesson(int courseId, int instructorId)
         {
+            int userId = int.Parse(User.FindFirst("UserId").Value);
+            if(userId != instructorId)
+            {
+                return Unauthorized();
+            }
             CreateLessonViewModel model = new CreateLessonViewModel()
             {
                 CourseId = courseId
@@ -50,8 +55,13 @@ namespace OnlineLearningSystem.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Instructor")]
-        public async Task<IActionResult> EditLesson(int lessonId)
+        public async Task<IActionResult> EditLesson(int lessonId, int instructorId)
         {
+            int userId = int.Parse(User.FindFirst("UserId").Value);
+            if (userId != instructorId)
+            {
+                return Unauthorized();
+            }
             return View(await lessonService.GetEditLessonView(lessonId));
         }
 

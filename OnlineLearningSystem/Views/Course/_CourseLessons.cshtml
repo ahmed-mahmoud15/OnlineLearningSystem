@@ -1,4 +1,19 @@
 ﻿@model IEnumerable<OnlineLearningSystem.ViewModels.ShowLessonCourseDetailsViewModel>
+@inject OnlineLearningSystem.Services.IEnrollmentService enrollmentService
+@{
+    int.TryParse(User?.FindFirst("UserId")?.Value, out int LogedUserId);
+
+    bool canView = false;
+
+    if (User.IsInRole("Instructor") && Model.FirstOrDefault()?.InstructorId == LogedUserId)
+    {
+        canView = true;
+    }
+    else if (User.IsInRole("Student") && Model.Any() && await enrollmentService.IsStudentEnrolledInCourseAsync(LogedUserId, Model.FirstOrDefault().CourseId))
+    {
+        canView = true;
+    }
+}
 
 <div class="card shadow-sm border-0 rounded-4 mb-4">
     <div class="card-header bg-secondary text-white">
@@ -19,11 +34,20 @@
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <div>
                             <span class="badge bg-secondary me-2">#@lesson.SequenceNumber</span>
+                            @if (canView)
+                            {
+                                <a asp-action="ViewLesson"
+                                   asp-controller="Lesson"
+                                   asp-route-courseId="@ViewData["CourseId"]"
+                                   asp-route-seqNum="@lesson.SequenceNumber">
+                                    <strong>@lesson.LessonTitle</strong>
+                                </a>
+                            }
+                            else
+                            {
+                                <strong>@lesson.LessonTitle</strong>
+                            }                         
 
-                            <a asp-action="ViewLesson" asp-controller="Lesson" asp-route-courseId="@ViewData["CourseId"]" asp-route-seqNum="@lesson.SequenceNumber">
-								<strong>@lesson.LessonTitle</strong>
-                            </a>
-                            
                         </div>
                         <span class="badge bg-info text-dark">@lesson.LessonType</span>
                     </li>

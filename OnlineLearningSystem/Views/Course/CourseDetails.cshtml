@@ -72,7 +72,7 @@
 			<a asp-action="MyProfile" asp-controller="Instructor" class="btn btn-outline-secondary rounded-pill px-4 shadow-sm">
 				<i class="bi bi-arrow-left"></i> Back to Profile
 			</a>
-			<a class="btn btn-primary rounded-pill px-4 shadow-sm" asp-action="CreateLesson" asp-controller="Lesson" asp-route-courseId="@Model.CourseId">Add Lesson</a>
+			<a class="btn btn-primary rounded-pill px-4 shadow-sm" asp-action="CreateLesson" asp-controller="Lesson" asp-route-courseId="@Model.CourseId" asp-route-instructorId="@Model.InstructorId">Add Lesson</a>
 		}
 	</div>
 </div>

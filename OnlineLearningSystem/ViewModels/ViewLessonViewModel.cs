@@ -8,7 +8,7 @@
         public string FilePath { get; set; }
         public int CourseId { get; set; }
         public string CourseName { get; set; }
-
+        public int InstructorId { get; set; }
         public Models.Type LessonType { get; set; }
         public int SequenceNumber { get; set; }
     }

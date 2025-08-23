@@ -106,6 +106,9 @@ namespace OnlineLearningSystem.Services
                 InstructorName = course.Instructor.FirstName + " " + course.Instructor.LastName,
                 Lessons = course.Lessons.Select(e => new ShowLessonCourseDetailsViewModel()
                 {
+                    CourseId = e.CourseId,
+                    InstructorId = e.Course.InstructorId,
+                    LessonId = e.Id,
                     LessonTitle = e.Title,
                     LessonType = e.Type.ToString(),
                     SequenceNumber = e.SequenceNumber

@@ -108,7 +108,8 @@ namespace OnlineLearningSystem.Services
                 LessonDescription = lesson.Description,
                 LessonId = lesson.Id,
                 LessonName = lesson.Title,
-                LessonType = lesson.Type
+                LessonType = lesson.Type,
+                InstructorId = course.InstructorId
             };
             return model;
         }
