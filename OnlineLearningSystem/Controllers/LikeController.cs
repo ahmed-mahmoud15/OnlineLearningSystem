@@ -1,15 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OnlineLearningSystem.Services;
 
 namespace OnlineLearningSystem.Controllers
 {
+    [Authorize(Roles = "Student")]
     public class LikeController : Controller
     {
         private readonly ILikeService likeService;
+        private readonly IStudentService studentService;
 
-        public LikeController(ILikeService likeService)
+        public LikeController(ILikeService likeService, IStudentService studentService)
         {
             this.likeService = likeService;
+            this.studentService = studentService;
         }
 
         [HttpPost]
@@ -57,6 +61,13 @@ namespace OnlineLearningSystem.Controllers
                 TempData["AlertType"] = "danger";
             }
             return LocalRedirect(returnUrl);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetLikes()
+        {
+            int studentId = int.Parse(User.FindFirst("UserId")?.Value);
+            return View(await studentService.GetStudentLikes(studentId));
         }
     }
 }

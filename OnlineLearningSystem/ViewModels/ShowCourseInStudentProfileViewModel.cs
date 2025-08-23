@@ -11,6 +11,9 @@ namespace OnlineLearningSystem.ViewModels
         public string Description { get; set; }
         [Display(Name = "Enrolled At")]
         public DateTime EnrollDate { get; set; }
+
+        [Display(Name = "Created At")]
+        public DateTime CreatedAt { get; set; }
         [Display(Name = "My Progress")]
         public float Prgress { get; set; }
     }

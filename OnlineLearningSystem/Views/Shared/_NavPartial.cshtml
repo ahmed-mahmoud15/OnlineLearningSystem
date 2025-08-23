@@ -14,6 +14,12 @@
         <li class="nav-item">
             <a class="nav-link text-dark" asp-action="MyEnrollments" asp-controller="Enrollment">My Courses</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-action="GetLikes" asp-controller="Like">My Liked Courses</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-action="GetFollowings" asp-controller="Follow">My Followings</a>
+        </li>
     }
     else if (User.IsInRole("Instructor"))
     {

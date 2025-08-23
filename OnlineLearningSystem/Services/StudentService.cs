@@ -96,5 +96,47 @@ namespace OnlineLearningSystem.Services
         {
             return await unitOfWork.Students.GetTotalNumberOfStudentsAsync();
         }
+
+        public async Task<IEnumerable<ShowCourseInStudentProfileViewModel>> GetStudentLikes(int studentId)
+        {
+            Student student = await CheckEntity.CheckAndGetStudentAsync(studentId, unitOfWork);
+
+            student = await unitOfWork.Students.GetWithLikedCoursesAsync(studentId);
+
+
+            List<ShowCourseInStudentProfileViewModel> myCourses = student.Likes.Select(e => new ShowCourseInStudentProfileViewModel()
+            {
+                Description = e.Course.Description,
+                Id = e.Course.Id,
+                Name = e.Course.Name,
+                CreatedAt = e.Course.CreationDate
+            }).ToList();
+
+            return myCourses;
+        }
+
+        public async Task<IEnumerable<ShowInstructorInfoViewModel>> GetStudentFollowing(int studentId)
+        {
+            IList<ShowInstructorInfoViewModel> model = new List<ShowInstructorInfoViewModel>();
+
+            var instructors = await unitOfWork.Instructors.GetAllWithCoursesFollowersAsync();
+
+            instructors = instructors.Where(e => e.FollowedBy.Any(i => i.StudentId == studentId)).ToList();
+
+            foreach (var instructor in instructors)
+            {
+                model.Add(new ShowInstructorInfoViewModel()
+                {
+                    Id = instructor.Id,
+                    Name = instructor.FirstName + " " + instructor.LastName,
+                    ProfilePhoto = instructor.ProfilePhotoPath,
+                    YearsOfExperience = instructor.YearsOfTeaching,
+                    NumberOfCourses = instructor.Courses.Count,
+                    NumberOfFollowers = instructor.FollowedBy.Count
+                });
+            }
+
+            return model;
+        }
     }
 }

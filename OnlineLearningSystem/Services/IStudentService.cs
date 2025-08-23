@@ -9,6 +9,9 @@ namespace OnlineLearningSystem.Services
         public Task EditStudentAsync(EditStudentViewModel model);
         public Task<EditStudentViewModel> GetStudentEditAsync(int studentId);
 
+        public Task<IEnumerable<ShowCourseInStudentProfileViewModel>> GetStudentLikes(int studentId);
+        public Task<IEnumerable<ShowInstructorInfoViewModel>> GetStudentFollowing(int studentId);
+
         public Task<IEnumerable<Student>> GetAllStudentsWithIdentityEnrollments();
 
         public Task<int> CountStudents();

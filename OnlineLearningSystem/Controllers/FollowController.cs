@@ -7,10 +7,12 @@ using OnlineLearningSystem.Services;
 public class FollowController : Controller
 {
     private readonly IFollowService followService;
+    private readonly IStudentService studentService;
 
-    public FollowController(IFollowService followService)
+    public FollowController(IFollowService followService, IStudentService studentService)
     {
         this.followService = followService;
+        this.studentService = studentService;
     }
 
     [HttpPost]
@@ -57,5 +59,12 @@ public class FollowController : Controller
             TempData["AlertType"] = "danger";
         }
         return LocalRedirect(returnUrl);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetFollowings()
+    {
+        int studentId = int.Parse(User.FindFirst("UserId")?.Value);
+        return View(await studentService.GetStudentFollowing(studentId));
     }
 }
